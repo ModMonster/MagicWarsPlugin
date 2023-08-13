@@ -111,10 +111,10 @@ public class StartingGameState extends GameState {
         board.addStaticLine("&eStarting in " + game.startingCountdown + "s");
         board.addStaticLine(" ");
         board.addStaticLine("&6&lPlayers");
-        board.addStaticLine("&e" + game.playersInGame.size() + " / " + game.map.maxPlayerCount);
+        board.addStaticLine("&e" + game.playersInGame.size() + " / " + game.world.map.maxPlayerCount);
         board.addStaticLine("  ");
         board.addStaticLine("&6&lMap");
-        board.addStaticLine("&e" + game.map.name);
+        board.addStaticLine("&e" + game.world.map.name);
         board.addStaticLine("   ");
         board.addStaticLine("    &3mc.modmonster.ca ");
     }

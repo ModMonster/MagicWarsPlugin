@@ -1,6 +1,5 @@
 package ca.modmonster.spells.item.spell.spells;
 
-import ca.modmonster.spells.game.Game;
 import ca.modmonster.spells.game.GameManager;
 import ca.modmonster.spells.item.Rarity;
 import ca.modmonster.spells.item.spell.*;

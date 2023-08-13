@@ -4,16 +4,13 @@ import ca.modmonster.spells.command.enchantments.EnchantmentsCommand;
 import ca.modmonster.spells.command.magicwars.MagicWarsCommand;
 import ca.modmonster.spells.command.spells.SpellsCommand;
 import ca.modmonster.spells.events.*;
-import ca.modmonster.spells.game.Game;
 import ca.modmonster.spells.game.GameManager;
 import ca.modmonster.spells.game.LootChest;
 import ca.modmonster.spells.item.enchantment.EnchantmentManager;
 import ca.modmonster.spells.util.InvisibilityManager;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -158,7 +155,7 @@ public final class Spells extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        GameManager.unloadGame();
+        GameManager.activeGame.world.unload();
         super.onDisable();
     }
 }

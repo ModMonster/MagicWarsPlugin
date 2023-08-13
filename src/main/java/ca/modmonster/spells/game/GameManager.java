@@ -5,8 +5,6 @@ import ca.modmonster.spells.game.gameevents.BorderShrinkGameEvent;
 import ca.modmonster.spells.game.gameevents.GameEvent;
 import ca.modmonster.spells.game.gameevents.RefillChestsGameEvent;
 import ca.modmonster.spells.game.gamestate.WaitingGameState;
-import ca.modmonster.spells.item.spell.Spell;
-import ca.modmonster.spells.util.FileUtil;
 import ca.modmonster.spells.util.Icons;
 import ca.modmonster.spells.util.Utilities;
 import net.kyori.adventure.text.TextComponent;
@@ -18,12 +16,11 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.*;
 
 public class GameManager {
     public static final List<WorldMap> maps = new ArrayList<>();
-    public static Game activeGame = null;
+    public static Game activeGame;
     public static final List<Material> blockBreakWhitelist = new ArrayList<>();
     public static final List<Player> allowedBuildingPlayers = new ArrayList<>();
     public static final List<GameEvent> events = new ArrayList<>();
@@ -191,42 +188,11 @@ public class GameManager {
     }
 
     static void createGame(WorldMap map) {
-        File activeWorldFolder = new File(Bukkit.getWorldContainer().getParentFile(), "game");
-
-        if (!activeWorldFolder.exists()) {
-            Spells.main.getLogger().info("Copying world folder for map " + map.id);
-
-            try {
-                FileUtil.copy(map.sourceWorldFolder, activeWorldFolder);
-            } catch (IOException e) {
-                Spells.main.getLogger().severe("Failed to load map from source folder " + map.sourceWorldFolder.getName());
-                e.printStackTrace();
-                return;
-            }
-        }
-
-        Spells.main.getLogger().info("Creating / loading game world from provided map " + map.id);
-
-        // create world
-        Bukkit.createWorld(new WorldCreator(activeWorldFolder.getName()));
-        Bukkit.getWorld("game").setAutoSave(false);
-
-        // create game
-        Game game = new Game(map, activeWorldFolder);
+        ActiveWorld world = new ActiveWorld(map);
+        Game game = new Game(world);
+        game.world.load();
         game.setState(new WaitingGameState());
 
         activeGame = game;
-    }
-
-    public static void unloadGame() {
-        Spells.main.getLogger().info("Unloading game world");
-
-        if (!Bukkit.unloadWorld("game", false)) {
-            Spells.main.getLogger().severe("FAILED TO UNLOAD GAME WORLD!!");
-        }
-
-        FileUtil.delete(activeGame.activeWorldFolder);
-
-        Spells.main.getLogger().info("Deleted game world");
     }
 }

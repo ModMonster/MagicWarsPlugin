@@ -2,6 +2,7 @@ package ca.modmonster.spells.game.gameevents;
 
 import ca.modmonster.spells.Spells;
 import ca.modmonster.spells.game.Game;
+import ca.modmonster.spells.game.GameManager;
 import ca.modmonster.spells.game.LootChest;
 import ca.modmonster.spells.util.Utilities;
 import net.kyori.adventure.text.Component;
@@ -49,9 +50,9 @@ public class RefillChestsGameEvent extends GameEvent {
         }
 
         // refill chests
-        for (LootChest chest : game.map.chestLocations) {
-            if (!Utilities.vectorToBlockLocation(Bukkit.getWorld("game"), chest.location).getBlock().getType().isAir()) {
-                LootChest.spawnLootChest(Bukkit.getWorld("game"), chest, true);
+        for (LootChest chest : game.world.map.chestLocations) {
+            if (!Utilities.vectorToBlockLocation(GameManager.activeGame.world.bukkitWorld, chest.location).getBlock().getType().isAir()) {
+                LootChest.spawnLootChest(GameManager.activeGame.world.bukkitWorld, chest, true);
             }
         }
     }

@@ -1,6 +1,7 @@
 package ca.modmonster.spells.game.gameevents;
 
 import ca.modmonster.spells.game.Game;
+import ca.modmonster.spells.game.GameManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.title.Title;
@@ -8,7 +9,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
-import java.lang.management.BufferPoolMXBean;
 import java.time.Duration;
 
 public class BorderShrinkGameEvent extends GameEvent {
@@ -44,6 +44,6 @@ public class BorderShrinkGameEvent extends GameEvent {
         }
 
         // shrink world border
-        Bukkit.getWorld("game").getWorldBorder().setSize(shrinkSize, shrinkTime);
+        GameManager.activeGame.world.bukkitWorld.getWorldBorder().setSize(shrinkSize, shrinkTime);
     }
 }

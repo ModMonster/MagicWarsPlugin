@@ -26,13 +26,11 @@ import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.File;
 import java.util.*;
 
 public class Game {
     public GameState state = null;
-    public final WorldMap map;
-    public final File activeWorldFolder;
+    public ActiveWorld world;
     public final List<Player> playersInGame = new ArrayList<>();
     public final Map<Player, Location> filledCages = new HashMap<>();
 
@@ -55,9 +53,8 @@ public class Game {
     Player secondPlace = null;
     Player thirdPlace = null;
 
-    public Game(WorldMap map, File activeWorldFolder) {
-        this.map = map;
-        this.activeWorldFolder = activeWorldFolder;
+    public Game(ActiveWorld world) {
+        this.world = world;
 
         startAnimatedScoreboardTitle();
 
@@ -113,7 +110,7 @@ public class Game {
     }
 
     public String getId() {
-        return this.activeWorldFolder.getName();
+        return this.world.activeWorldFolder.getName();
     }
 
     public void setState(GameState newState) {
@@ -134,6 +131,12 @@ public class Game {
         }
     }
 
+    public void mapReset() {
+        world.map = Utilities.getRandomEntryInArray(GameManager.maps);
+        world.reset();
+        setState(new WaitingGameState());
+    }
+
     public void fullReset() {
         // clear kills
         kills.clear();
@@ -147,14 +150,19 @@ public class Game {
         for (Player player : Bukkit.getOnlinePlayers()) {
             Utilities.bungeeServerSend(player, Spells.mainConfig.getString("lobby-server"));
         }
-    }
 
-    public void resetMap() {
-        Spells.main.getLogger().info("Resetting game world");
+        final int[] tick = {0};
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                Spells.main.getLogger().info("Trying to reset map, attempted " + tick[0] + " times.");
+                tick[0] += 1;
+                if (!Bukkit.getOnlinePlayers().isEmpty() && tick[0] < 10) return;
 
-        // reset
-        GameManager.unloadGame();
-        GameManager.createGame(Utilities.getRandomEntryInArray(GameManager.maps));
+                cancel();
+                mapReset();
+            }
+        }.runTaskTimer(Spells.main, 0, 10);
     }
 
     /**
@@ -243,7 +251,7 @@ public class Game {
     public String join(Player player) {
         if (state == null) return "Still loading game, try again in a few seconds!";
         if (!(state instanceof WaitingGameState) && !(state instanceof WaitingStartingGameState)) return "Game is currently in an unjoinable state (" + state.getClass().getSimpleName() + ")!";
-        if (playersInGame.size() >= map.maxPlayerCount) return "All player slots in this game are taken!";
+        if (playersInGame.size() >= world.map.maxPlayerCount) return "All player slots in this game are taken!";
 
         // add player to list
         playersInGame.add(player);
@@ -251,8 +259,8 @@ public class Game {
         // get free cages
         List<Location> validCageLocations = new ArrayList<>();
 
-        for (Vector vector : map.podLocations) {
-            Location location = Utilities.centerLocationOnBlock(Utilities.vectorToBlockLocation(Bukkit.getWorld("game"), vector));
+        for (Vector vector : world.map.podLocations) {
+            Location location = Utilities.centerLocationOnBlock(Utilities.vectorToBlockLocation(GameManager.activeGame.world.bukkitWorld, vector));
 
             if (!filledCages.containsValue(location)) {
                 validCageLocations.add(location);
@@ -279,7 +287,7 @@ public class Game {
         player.setGameMode(GameMode.SURVIVAL);
 
         // set look direction
-        Vector dir = map.spawnFacingLocation.clone().subtract(player.getEyeLocation().toVector());
+        Vector dir = world.map.spawnFacingLocation.clone().subtract(player.getEyeLocation().toVector());
         Location loc = player.getLocation().setDirection(dir);
         player.teleport(loc);
 
@@ -290,12 +298,12 @@ public class Game {
         ));
 
         // set waiting starting
-        if (playersInGame.size() >= map.minPlayerCount) {
+        if (playersInGame.size() >= world.map.minPlayerCount) {
             setState(new WaitingStartingGameState());
         }
 
         // set starting
-        if (playersInGame.size() >= map.maxPlayerCount) {
+        if (playersInGame.size() >= world.map.maxPlayerCount) {
             setState(new StartingGameState());
         }
 
@@ -371,14 +379,14 @@ public class Game {
             }
 
             // set state if everyone leaves
-            if (playersInGame.size() == 0) {
-                resetMap();
-            }
+//            if (playersInGame.size() == 0) {
+//                mapReset();
+//            }
         }
 
         if (state instanceof WaitingStartingGameState || state instanceof StartingGameState) {
             // set waiting if too many people leave
-            if (playersInGame.size() < map.minPlayerCount) {
+            if (playersInGame.size() < world.map.minPlayerCount) {
                 setState(new WaitingGameState());
             }
         }
@@ -408,7 +416,7 @@ public class Game {
         OnEntityDamage.invulnerableEntities.add(player);
 
         // prevent player from picking up items
-        for (Entity entity : Bukkit.getWorld("game").getEntities()) {
+        for (Entity entity : GameManager.activeGame.world.bukkitWorld.getEntities()) {
             if (!(entity instanceof Item)) continue;
             ((Item) entity).setPickupDelay(Integer.MAX_VALUE);
         }
@@ -491,6 +499,6 @@ public class Game {
         return alivePlayers.contains(player);
     }
     public boolean isJoinable() {
-        return playersInGame.size() < map.maxPlayerCount && (state instanceof WaitingGameState || state instanceof WaitingStartingGameState || state instanceof StartingGameState);
+        return playersInGame.size() < world.map.maxPlayerCount && (state instanceof WaitingGameState || state instanceof WaitingStartingGameState || state instanceof StartingGameState);
     }
 }

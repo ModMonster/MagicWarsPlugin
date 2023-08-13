@@ -9,6 +9,7 @@ import ca.modmonster.spells.util.Utilities;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
@@ -56,7 +57,7 @@ public class OnPlayerMove implements Listener {
         if (game.isAlive(player)) return;
         if (!player.getGameMode().equals(GameMode.SPECTATOR)) return;
 
-        if (!Utilities.isLocationWithinWorldBounds(event.getTo(), game.map)) {
+        if (!Utilities.isLocationWithinWorldBounds(event.getTo(), game.world.map)) {
             player.sendActionBar(Component.text("You can't leave the play area!", NamedTextColor.RED));
             event.setCancelled(true);
         }

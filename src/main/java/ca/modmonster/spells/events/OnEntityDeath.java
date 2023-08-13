@@ -1,6 +1,5 @@
 package ca.modmonster.spells.events;
 
-import ca.modmonster.spells.game.Game;
 import ca.modmonster.spells.game.GameManager;
 import ca.modmonster.spells.item.enchantment.ArmorEnchantment;
 import ca.modmonster.spells.item.enchantment.CustomEnchantment;

@@ -1,14 +1,10 @@
 package ca.modmonster.spells.events;
 
 import ca.modmonster.spells.Spells;
-import ca.modmonster.spells.game.Game;
 import ca.modmonster.spells.game.GameManager;
 import ca.modmonster.spells.gui.EnchanterGui;
 import ca.modmonster.spells.item.spell.*;
 import ca.modmonster.spells.util.Utilities;
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
-import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
