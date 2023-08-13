@@ -1,0 +1,157 @@
+# lobby server name
+lobby-server: "lobby"
+
+# ===================================================
+# Events that take place during the game
+# Format: [EVENT, TIME, (NEW_SIZE), (DURATION)]
+# Events: BORDER_SHRINK, REFILL_CHESTS
+# TIME is calculated in seconds.
+# NEW_SIZE only applies when the world border should shrink. It defines the new radius of the play area.
+# DURATION only applies when the world border should shrink. It defines how long (in seconds) the border should shrink for.
+# ===================================================
+game-events:
+  - [REFILL_CHESTS, 120]
+  - [BORDER_SHRINK, 180, 120, 30]
+  - [REFILL_CHESTS, 240]
+  - [BORDER_SHRINK, 300, 50, 30]
+  - [BORDER_SHRINK, 500, 0, 30]
+
+# ===================================================
+# List of vanilla loot that can be generated in chests.
+# Format:
+# [MATERIAL, WEIGHT, STACK_SIZE]
+# MATERIAL - Item type / material name, see https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html
+# WEIGHT - Chance that item is chosen when randomly picking items. Higher gives the item a greater chance of being chosen.
+# STACK_SIZE - Maximum stack size that can be chosen of an item
+# ===================================================
+loot:
+  - [WOODEN_SWORD, 6, 1]
+  - [STONE_SWORD, 4, 1]
+  - [IRON_SWORD, 2, 1]
+  - [LEATHER_HELMET, 6, 1]
+  - [LEATHER_CHESTPLATE, 6, 1]
+  - [LEATHER_LEGGINGS, 6, 1]
+  - [LEATHER_BOOTS, 6, 1]
+  - [CHAINMAIL_HELMET, 4, 1]
+  - [CHAINMAIL_CHESTPLATE, 4, 1]
+  - [CHAINMAIL_LEGGINGS, 4, 1]
+  - [CHAINMAIL_BOOTS, 4, 1]
+  - [IRON_HELMET, 2, 1]
+  - [IRON_CHESTPLATE, 2, 1]
+  - [IRON_LEGGINGS, 2, 1]
+  - [IRON_BOOTS, 2, 1]
+  - [ENDER_PEARL, 8, 1]
+  - [GOLDEN_APPLE, 6, 1]
+
+# ===================================================
+# Configuration related to messages that appear when a player dies.
+# ===================================================
+death-messages:
+  adjectives: # list of adjectives that can be used
+    - "violently"
+    - "brutally"
+    - "awfully"
+    - "beautifully"
+    - "cleanly"
+    - "glamorously"
+    - "magnificently"
+    - "boringly"
+    - "delightfully"
+    - "eagerly"
+    - "calmly"
+    - "proudly"
+    - "victoriously"
+    - "clumsily"
+    - "gently"
+    - "helplessly"
+    - "lazily"
+    - "mysteriously"
+    - "nervously"
+    - "obnoxiously"
+    - "repulsively"
+    - "vigorously"
+    - "brutally"
+  verbs: # list of verbs that can be used
+    - "throngled"
+    - "killed"
+    - "murdered"
+    - "removed from the game"
+    - "eliminated"
+    - "assassinated"
+    - "executed"
+    - "slain"
+    - "demolished"
+    - "wrecked"
+    - "toasted"
+    - "squashed"
+    - "bamboozled"
+    - "impaled"
+
+  # ===================================================
+  # Sets the message shown when someone is killed by a player.
+  # Available placeholders:
+  # %victim% - Player who was killed
+  # %killer% - Player who killed the victim
+  # %adjective% - Randomly chosen adjective from list
+  # %verb% - Randomly chosen verb from list
+  # ===================================================
+  killed-template: "&b&l%victim%&3 was %adjective% %verb% by &b&l%killer%&3."
+
+  # ===================================================
+  # Sets the message shown when someone is killed by a minion.
+  # Available placeholders:
+  # %victim% - Player who was killed
+  # %killer% - Player who killed the victim
+  # %minion% - Type of minion that did the killing - for example 'Zombie'
+  # %adjective% - Randomly chosen adjective from list
+  # %verb% - Randomly chosen verb from list
+  # ===================================================
+  killed-template-minion: "&b&l%victim%&3 was %adjective% %verb% by &b&l%killer%'s &b%minion% Minion&3."
+
+  # ===================================================
+  # Sets the messages shown when someone dies.
+  # Available placeholders:
+  # %player% - Player who died
+  # ===================================================
+  death-templates:
+    - "&b&l%player%&3 died."
+    - "&b&l%player%&3 kicked the bucket."
+  death-templates-fire:
+    - "&b&l%player%&3 burned to death."
+    - "&b&l%player%&3 was roasted."
+    - "&b&l%player%&3 got cooked alive."
+  death-templates-fall:
+    - "&b&l%player%&3 fell to their death."
+    - "&b&l%player%&3 fell off a cliff."
+    - "&b&l%player%&3 fell from a high place."
+    - "&b&l%player%&3 fell too far."
+  death-templates-drown:
+    - "&b&l%player%&3 drowned."
+  death-templates-explode:
+    - "&b&l%player%&3 exploded."
+    - "&b&l%player%&3 went out with a bang."
+    - "&b&l%player%&3 went boom."
+    - "&b&l%player%&3 explodeded."
+    - "&b&l%player%&3 explodededed."
+    - "&b&l%player%&3 explodedededed."
+  death-templates-lightning:
+    - "&b&l%player%&3 was struck by lightning."
+    - "&b&l%player%&3 angered the gods."
+  death-templates-wither:
+    - "&b&l%player%&3 withered away."
+
+  # ===================================================
+  # Messages that can be randomly chosen when someone leaves the game.
+  # Available placeholders:
+  # %player% - Player who left
+  # ===================================================
+  leave-templates:
+    - "&b&l%player%&3 left the game."
+    - "&b&l%player%&3's connection dropped."
+    - "&b&l%player%&3 didn't want to play anymore."
+    - "&b&l%player%&3 rage quit."
+    - "&b&l%player%&3 got bored."
+    - "&b&l%player%&3 checked out early."
+    - "&b&l%player%&3 noped out of here."
+    - "&b&l%player%&3 left."
+    - "&b&l%player%&3 is no longer with us."

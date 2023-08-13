@@ -1,0 +1,146 @@
+block-break-whitelist: # list of blocks to allow breaking
+  - OAK_LEAVES
+  - BIRCH_LEAVES
+  - SPRUCE_LEAVES
+  - ACACIA_LEAVES
+  - DARK_OAK_LEAVES
+  - JUNGLE_LEAVES
+  - GRASS
+  - TALL_GRASS
+  - DANDELION
+  - POPPY
+  - BLUE_ORCHID
+  - ALLIUM
+  - AZURE_BLUET
+  - RED_TULIP
+  - PINK_TULIP
+  - WHITE_TULIP
+  - ORANGE_TULIP
+  - OXEYE_DAISY
+  - LILY_OF_THE_VALLEY
+  - WITHER_ROSE
+  - SUNFLOWER
+  - LILAC
+  - ROSE_BUSH
+  - PEONY
+  - DEAD_BUSH
+  - LILY_PAD
+  - FERN
+  - LARGE_FERN
+maps:
+#  Here is a map to demonstrate how to use this configuration.
+#  - forest:
+#      name: "Forest"
+#      world: magic_games-forest # world name / path within /maps
+#      map-size: 184 # size of map in radius (for worldborder)
+#      pod-size: [1, 1, 1, 1, 3, 1] # size of the spawn pod that will be deleted [negative-x, negative-y, negative-z, positive-x, positive-y, positive-z]
+#      chest-locations: # locations for all the chests on the map
+#        - [-572, 117, -2755, false]
+#        - [-571, 117, -2754, false]
+#        - [-570, 118, -2755, false]
+#        - [-569, 117, -2752, false]
+#        - [-569, 119, -2754, false]
+#        - [-568, 120, -2756, false]
+#        - [-569, 119, -2756, false]
+#        - [-567, 118, -2757, false]
+#        - [-567, 119, -2755, false]
+#        - [-566, 117, -2756, false]
+#        - [-565, 117, -2754, false]
+#        - [-568, 117, -2758, false]
+#        - [-570, 117, -2758, false]
+#        - [-571, 117, -2757, false]
+#        - [-591, 112, -2768, true]
+#        - [-587, 112, -2790, true]
+#        - [-572, 113, -2809, true]
+#        - [-572, 116, -2807, true]
+#        - [-593, 115, -2803, true]
+#        - [-576, 114, -2825, true]
+#        - [-587, 113, -2843, true]
+#        - [-574, 113, -2837, true]
+#        - [-607, 117, -2833, true]
+#        - [-608, 113, -2836, true]
+#        - [-569, 109, -2792, true]
+#        - [-559, 113, -2786, true]
+#        - [-540, 109, -2768, true]
+#        - [-548, 109, -2752, true]
+#        - [-532, 108, -2754, true]
+#        - [-527, 112, -2784, true]
+#        - [-536, 133, -2811, true]
+#        - [-541, 120, -2807, true]
+#        - [-531, 123, -2810, true]
+#        - [-520, 118, -2803, true]
+#        - [-512, 116, -2804, true]
+#        - [-503, 115, -2813, true]
+#        - [-517, 121, -2824, true]
+#        - [-518, 119, -2834, true]
+#        - [-510, 119, -2845, true]
+#        - [-531, 120, -2839, true]
+#        - [-547, 123, -2839, true]
+#        - [-571, 112, -2844, true]
+#        - [-563, 114, -2833, true]
+#        - [-622, 135, -2838, true]
+#        - [-628, 118, -2844, true]
+#        - [-639, 124, -2847, true]
+#        - [-653, 116, -2838, true]
+#        - [-660, 93, -2824, true]
+#        - [-656, 105, -2799, true]
+#        - [-652, 88, -2788, true]
+#        - [-659, 67, -2772, true]
+#        - [-654, 74, -2753, true]
+#        - [-647, 81, -2744, true]
+#        - [-652, 95, -2724, true]
+#        - [-655, 103, -2713, true]
+#        - [-636, 108, -2709, true]
+#        - [-642, 105, -2696, true]
+#        - [-579, 108, -2688, true]
+#        - [-554, 96, -2671, true]
+#        - [-556, 104, -2697, true]
+#        - [-492, 101, -2666, true]
+#        - [-477, 104, -2668, true]
+#        - [-496, 96, -2679, true]
+#        - [-506, 99, -2688, true]
+#        - [-505, 94, -2694, true]
+#        - [-493, 109, -2724, true]
+#        - [-482, 113, -2734, true]
+#        - [-482, 107, -2748, true]
+#        - [-484, 104, -2784, true]
+#        - [-501, 111, -2781, true]
+#        - [-494, 106, -2799, true]
+#        - [-504, 113, -2792, true]
+#        - [-510, 112, -2785, true]
+#        - [-504, 111, -2773, true]
+#        - [-504, 106, -2751, true]
+#        - [-484, 109, -2702, true]
+#        - [-490, 108, -2690, true]
+#        - [-546, 114, -2703, true]
+#        - [-600, 110, -2727, true]
+#        - [-623, 105, -2739, true]
+#        - [-626, 105, -2707, true]
+#        - [-639, 104, -2678, true]
+#        - [-495, 114, -2821, true]
+#        - [-493, 117, -2844, true]
+#        - [-524, 127, -2818, true]
+#        - [-544, 111, -2788, true]
+#        - [-594, 102, -2669, true]
+#        - [-477, 111, -2830, true]
+#        - [-658, 93, -2664, true]
+#      spawn-facing: [-568, 124, -2755] # players will spawn facing towards this position
+#      spawn-locations: # locations for the spawn cages
+#        - [-584, 124, -2752]
+#        - [-584, 124, -2758]
+#        - [-581, 124, -2764]
+#        - [-577, 124, -2768]
+#        - [-571, 124, -2771]
+#        - [-565, 124, -2771]
+#        - [-559, 124, -2768]
+#        - [-555, 124, -2764]
+#        - [-552, 124, -2758]
+#        - [-552, 124, -2752]
+#        - [-555, 124, -2746]
+#        - [-559, 124, -2742]
+#        - [-565, 124, -2739]
+#        - [-571, 124, -2739]
+#        - [-577, 124, -2742]
+#        - [-581, 124, -2746]
+#      min-players: 4 # minimum amount of players required to start game
+#      max-players: 16 # maximum amount of players that can play on this map

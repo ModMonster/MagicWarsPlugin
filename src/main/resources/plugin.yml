@@ -1,0 +1,28 @@
+name: Spells
+version: '${project.version}'
+main: ca.modmonster.spells.Spells
+api-version: 1.19
+softdepend:
+  - ProtocolLib
+
+commands:
+  spell:
+    description: Manage spells
+    usage: /spell
+    permission: spells.spell
+  magicwarsenchants:
+    description: Manage enchantments
+    usage: /magicwarsenchants
+    permission: spells.enchants
+  mwen:
+    description: Manage enchantments
+    usage: /mwen
+    permission: spells.enchants
+  magicwars:
+    description: Manage Magic Wars
+    usage: /magicwars
+    permission: spells.magicwars
+  mw:
+    description: Manage Magic Wars
+    usage: /mw
+    permission: spells.magicwars
