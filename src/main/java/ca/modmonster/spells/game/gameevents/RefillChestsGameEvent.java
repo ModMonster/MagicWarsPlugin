@@ -7,6 +7,7 @@ import ca.modmonster.spells.util.Utilities;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.title.Title;
+import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -49,8 +50,8 @@ public class RefillChestsGameEvent extends GameEvent {
 
         // refill chests
         for (LootChest chest : game.map.chestLocations) {
-            if (!Utilities.vectorToBlockLocation(game.world, chest.location).getBlock().getType().isAir()) {
-                LootChest.spawnLootChest(game.world, chest, true);
+            if (!Utilities.vectorToBlockLocation(Bukkit.getWorld("game"), chest.location).getBlock().getType().isAir()) {
+                LootChest.spawnLootChest(Bukkit.getWorld("game"), chest, true);
             }
         }
     }

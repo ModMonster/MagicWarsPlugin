@@ -212,7 +212,7 @@ public class GameManager {
         Bukkit.getWorld("game").setAutoSave(false);
 
         // create game
-        Game game = new Game(map, activeWorldFolder, Bukkit.getWorld("game"));
+        Game game = new Game(map, activeWorldFolder);
         game.setState(new WaitingGameState());
 
         activeGame = game;
@@ -222,7 +222,7 @@ public class GameManager {
         Spells.main.getLogger().info("Unloading game world");
 
         if (!Bukkit.unloadWorld("game", false)) {
-            Spells.main.getLogger().severe("FAILED TO UNLOAD GAME WORLD!!!\nyou will now experience severe problems good luck XD");
+            Spells.main.getLogger().severe("FAILED TO UNLOAD GAME WORLD!!");
         }
 
         FileUtil.delete(activeGame.activeWorldFolder);

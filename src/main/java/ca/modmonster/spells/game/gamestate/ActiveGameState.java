@@ -9,6 +9,7 @@ import ca.modmonster.spells.game.gameevents.GameEvent;
 import ca.modmonster.spells.util.Icons;
 import ca.modmonster.spells.util.Utilities;
 import ca.modmonster.spells.util.betterscoreboard.BetterScoreboard;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Chest;
@@ -39,7 +40,7 @@ public class ActiveGameState extends GameState {
             for (int x = -game.map.podSize.get(0); x < game.map.podSize.get(3) + 1; x++) {
                 for (int y = -game.map.podSize.get(2); y < game.map.podSize.get(4) + 1; y++) {
                     for (int z = -game.map.podSize.get(3); z < game.map.podSize.get(5) + 1; z++) {
-                        Location location = Utilities.vectorToBlockLocation(game.world, vector.clone().add(new Vector(x, y, z)));
+                        Location location = Utilities.vectorToBlockLocation(Bukkit.getWorld("game"), vector.clone().add(new Vector(x, y, z)));
 
                         location.getBlock().setType(Material.AIR);
                     }
@@ -80,13 +81,13 @@ public class ActiveGameState extends GameState {
 
         // fill chests
         for (LootChest chest : game.map.chestLocations) {
-            LootChest.spawnLootChest(game.world, chest, false);
+            LootChest.spawnLootChest(Bukkit.getWorld("game"), chest, false);
         }
 
         // add enchantment table to random chest
         LootChest enchantmentTableChest = Utilities.getRandomEntryInArray(game.map.chestLocations);
 
-        Location location = Utilities.vectorToBlockLocation(game.world, enchantmentTableChest.location);
+        Location location = Utilities.vectorToBlockLocation(Bukkit.getWorld("game"), enchantmentTableChest.location);
         if (!(location.getBlock().getState() instanceof Chest)) return;
 
         Inventory chestInventory = ((Chest) location.getBlock().getState()).getBlockInventory();

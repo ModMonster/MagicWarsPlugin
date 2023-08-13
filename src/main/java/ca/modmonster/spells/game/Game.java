@@ -14,7 +14,6 @@ import ca.modmonster.spells.util.betterscoreboard.animations.MagicGamesScoreboar
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.title.Title;
 import org.bukkit.*;
@@ -34,7 +33,6 @@ public class Game {
     public GameState state = null;
     public final WorldMap map;
     public final File activeWorldFolder;
-    public final World world;
     public final List<Player> playersInGame = new ArrayList<>();
     public final Map<Player, Location> filledCages = new HashMap<>();
 
@@ -57,10 +55,9 @@ public class Game {
     Player secondPlace = null;
     Player thirdPlace = null;
 
-    public Game(WorldMap map, File activeWorldFolder, World world) {
+    public Game(WorldMap map, File activeWorldFolder) {
         this.map = map;
         this.activeWorldFolder = activeWorldFolder;
-        this.world = world;
 
         startAnimatedScoreboardTitle();
 
@@ -137,10 +134,7 @@ public class Game {
         }
     }
 
-    public void reset() {
-        // reset game
-        resetMap();
-
+    public void fullReset() {
         // clear kills
         kills.clear();
 
@@ -148,37 +142,19 @@ public class Game {
         if (eventTimerRunnable != null) {
             eventTimerRunnable.cancel();
         }
-    }
 
-    public void resetMap() {
-        Spells.main.getLogger().info("Resetting world " + world.getName());
-
+        // reset game
         for (Player player : Bukkit.getOnlinePlayers()) {
             Utilities.bungeeServerSend(player, Spells.mainConfig.getString("lobby-server"));
         }
+    }
 
-        final int[] time = {0};
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                time[0] += 1;
+    public void resetMap() {
+        Spells.main.getLogger().info("Resetting game world");
 
-                // in case players are never transferred
-                if (time[0] > 200) {
-                    for (Player player : Bukkit.getOnlinePlayers()) {
-                        player.kick(Component.text("Took to long to transfer, you have been kicked. Report this to ModMonster."));
-                    }
-                }
-
-                if (!Bukkit.getOnlinePlayers().isEmpty()) return;
-
-                cancel();
-
-                // reset
-                GameManager.unloadGame();
-                GameManager.createGame(Utilities.getRandomEntryInArray(GameManager.maps));
-            }
-        }.runTaskTimer(Spells.main, 1, 1);
+        // reset
+        GameManager.unloadGame();
+        GameManager.createGame(Utilities.getRandomEntryInArray(GameManager.maps));
     }
 
     /**
@@ -194,7 +170,7 @@ public class Game {
         updateScoreboards();
 
         victim.setGameMode(GameMode.SPECTATOR); // set victim to spectator
-        world.sendMessage(GameManager.getDeathMessage(victim, killer, minion)); // send death message
+        Bukkit.getServer().sendMessage(GameManager.getDeathMessage(victim, killer, minion)); // send death message
 
         // play sounds
         if (killer != null) PlaySound.highPitchDing(killer);
@@ -276,7 +252,7 @@ public class Game {
         List<Location> validCageLocations = new ArrayList<>();
 
         for (Vector vector : map.podLocations) {
-            Location location = Utilities.centerLocationOnBlock(Utilities.vectorToBlockLocation(world, vector));
+            Location location = Utilities.centerLocationOnBlock(Utilities.vectorToBlockLocation(Bukkit.getWorld("game"), vector));
 
             if (!filledCages.containsValue(location)) {
                 validCageLocations.add(location);
@@ -297,7 +273,7 @@ public class Game {
         player.getInventory().setItem(8, GameManager.getLobbyCompassUsableInWorld());
 
         // send join message
-        world.sendMessage(Utilities.getStatusMessage(Utilities.StatusMessageType.JOIN, Utilities.getComponentWithDefaultColorAqua(player.displayName())));
+        Bukkit.getServer().sendMessage(Utilities.getStatusMessage(Utilities.StatusMessageType.JOIN, Utilities.getComponentWithDefaultColorAqua(player.displayName())));
 
         // set to survival
         player.setGameMode(GameMode.SURVIVAL);
@@ -337,13 +313,20 @@ public class Game {
         return null;
     }
 
-    public String leave(Player player) {
+    public void kickPlayer(Player player) {
+        Utilities.bungeeServerSend(player, Spells.mainConfig.getString("lobby-server"));
+        leave(player);
+    }
+
+    public void leave(Player player) {
         // remove player invulnerability
         OnEntityDamage.invulnerableEntities.remove(player);
 
         // remove from scoreboard
-        boards.get(player)._unregister();
-        boards.remove(player);
+        if (boards.get(player) != null) {
+            boards.get(player)._unregister();
+            boards.remove(player);
+        }
 
         // cancel all player events
         Map<BukkitRunnable, Player> eventMap = new HashMap<>(runningPlayerEvents);
@@ -362,9 +345,9 @@ public class Game {
         // send leave message
         if (firstPlace == null && isAlive(player)) {
             if (state instanceof ActiveGameState) {
-                world.sendMessage(Utilities.getStatusMessage(Utilities.StatusMessageType.LEAVE, getLeaveMessage(player)));
+                Bukkit.getServer().sendMessage(Utilities.getStatusMessage(Utilities.StatusMessageType.LEAVE, getLeaveMessage(player)));
             } else {
-                world.sendMessage(Utilities.getStatusMessage(Utilities.StatusMessageType.LEAVE, Utilities.getComponentWithDefaultColorAqua(player.displayName())));
+                Bukkit.getServer().sendMessage(Utilities.getStatusMessage(Utilities.StatusMessageType.LEAVE, Utilities.getComponentWithDefaultColorAqua(player.displayName())));
             }
         }
 
@@ -389,7 +372,7 @@ public class Game {
 
             // set state if everyone leaves
             if (playersInGame.size() == 0) {
-                reset();
+                resetMap();
             }
         }
 
@@ -402,8 +385,6 @@ public class Game {
 
         // set player count on scoreboard
         updateScoreboards();
-
-        return null;
     }
 
     TextComponent getLeaveMessage(Player player) {
@@ -427,22 +408,22 @@ public class Game {
         OnEntityDamage.invulnerableEntities.add(player);
 
         // prevent player from picking up items
-        for (Entity entity : world.getEntities()) {
+        for (Entity entity : Bukkit.getWorld("game").getEntities()) {
             if (!(entity instanceof Item)) continue;
             ((Item) entity).setPickupDelay(Integer.MAX_VALUE);
         }
 
         // send chat leaderboard message
-        world.sendMessage(Component.empty());
-        world.sendMessage(Utilities.stringToComponent("&8-=-=-=-=- &b&lGAME OVER!&8 -=-=-=-=-"));
-        world.sendMessage(Component.empty());
-        world.sendMessage(Utilities.stringToComponent("&eWinner &8- &e").append(Utilities.getComponentWithDefaultColorAqua(player.displayName())));
+        Bukkit.getServer().sendMessage(Component.empty());
+        Bukkit.getServer().sendMessage(Utilities.stringToComponent("&8-=-=-=-=- &b&lGAME OVER!&8 -=-=-=-=-"));
+        Bukkit.getServer().sendMessage(Component.empty());
+        Bukkit.getServer().sendMessage(Utilities.stringToComponent("&eWinner &8- &e").append(Utilities.getComponentWithDefaultColorAqua(player.displayName())));
 
-        if (secondPlace != null) world.sendMessage(Utilities.stringToComponent("&62nd Place &8- &6").append(Utilities.getComponentWithDefaultColorAqua(secondPlace.displayName())));
-        if (thirdPlace != null) world.sendMessage(Utilities.stringToComponent("&c3rd Place &8- &c").append(Utilities.getComponentWithDefaultColorAqua(thirdPlace.displayName())));
+        if (secondPlace != null) Bukkit.getServer().sendMessage(Utilities.stringToComponent("&62nd Place &8- &6").append(Utilities.getComponentWithDefaultColorAqua(secondPlace.displayName())));
+        if (thirdPlace != null) Bukkit.getServer().sendMessage(Utilities.stringToComponent("&c3rd Place &8- &c").append(Utilities.getComponentWithDefaultColorAqua(thirdPlace.displayName())));
 
-        world.sendMessage(Component.empty());
-        world.sendMessage(Utilities.stringToComponent("&8-=-=-=-=--=-=-=-=--=-=-=-=--=-"));
+        Bukkit.getServer().sendMessage(Component.empty());
+        Bukkit.getServer().sendMessage(Utilities.stringToComponent("&8-=-=-=-=--=-=-=-=--=-=-=-=--=-"));
 
         // send player title
         player.showTitle(Title.title(
@@ -477,16 +458,11 @@ public class Game {
 
         runningPlayerEvents.put(victoryFireworksRunnable, player);
 
-        // kick out spectators
+        // reset
         new BukkitRunnable() {
             @Override
             public void run() {
-                if (!(state instanceof ActiveGameState)) return;
-                List<Player> playersToRemove = new ArrayList<>(playersInGame);
-
-                for (Player player1 : playersToRemove) {
-                    leave(player1);
-                }
+                fullReset();
             }
         }.runTaskLater(Spells.main, 200);
     }
