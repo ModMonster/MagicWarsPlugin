@@ -138,8 +138,11 @@ public class Game {
     }
 
     public void fullReset() {
-        // clear kills
+        // reset things to normal
         kills.clear();
+        filledCages.clear();
+        nextEventIndex = 0;
+        time = 0;
 
         // stop event timer
         if (eventTimerRunnable != null) {

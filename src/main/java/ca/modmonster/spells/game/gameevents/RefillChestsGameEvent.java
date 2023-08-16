@@ -51,9 +51,7 @@ public class RefillChestsGameEvent extends GameEvent {
 
         // refill chests
         for (LootChest chest : game.world.map.chestLocations) {
-            if (!Utilities.vectorToBlockLocation(GameManager.activeGame.world.bukkitWorld, chest.location).getBlock().getType().isAir()) {
-                LootChest.spawnLootChest(GameManager.activeGame.world.bukkitWorld, chest, true);
-            }
+            LootChest.spawnLootChest(GameManager.activeGame.world.bukkitWorld, chest, false);
         }
     }
 }

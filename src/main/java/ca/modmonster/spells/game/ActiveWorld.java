@@ -87,7 +87,7 @@ public class ActiveWorld {
         if (bukkitWorld != null) {
             Spells.main.getLogger().info("Unloading game world");
             for (Player player : Bukkit.getOnlinePlayers()) {
-                player.kick(Utilities.stringToComponent("&cTook too long to transfer you to lobby! Please report this to ModMonster"));
+                player.kick(Utilities.stringToComponent("&cForcibly transferring you to lobby."));
                 Spells.main.getLogger().info("Byebye " + player.getName());
             }
             if (!Bukkit.unloadWorld(bukkitWorld, false)) Spells.main.getLogger().severe("FAILED TO UNLOAD GAME WORLD!!");
