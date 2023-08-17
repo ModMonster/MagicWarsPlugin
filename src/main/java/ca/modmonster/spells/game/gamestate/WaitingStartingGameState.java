@@ -10,6 +10,11 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class WaitingStartingGameState extends GameState {
     @Override
+    public String getName() {
+        return "WAITING_STARTING";
+    }
+
+    @Override
     public void setState(Game game) {
         game.startingCountdown = 30;
 

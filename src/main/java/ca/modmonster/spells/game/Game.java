@@ -1,6 +1,7 @@
 package ca.modmonster.spells.game;
 
 import ca.modmonster.spells.Spells;
+import ca.modmonster.spells.database.DatabaseManager;
 import ca.modmonster.spells.events.OnEntityDamage;
 import ca.modmonster.spells.game.gamestate.*;
 import ca.modmonster.spells.item.spell.spells.minion.Minion;
@@ -120,8 +121,8 @@ public class Game {
         state = newState;
         updateScoreboards();
 
-        // refresh guis
-//        CustomGui.reloadAll();
+        // update database
+        Spells.db.setServerInDatabase();
     }
 
     public void updateScoreboards() {
@@ -138,6 +139,8 @@ public class Game {
     }
 
     public void fullReset() {
+        setState(new ResettingGameState());
+
         // reset things to normal
         kills.clear();
         filledCages.clear();
@@ -247,8 +250,8 @@ public class Game {
             thirdPlace = victim;
         }
 
-        // refresh guis
-//        CustomGui.reloadAll();
+        // update database
+        Spells.db.setServerInDatabase();
     }
 
     public String join(Player player) {
@@ -318,8 +321,8 @@ public class Game {
         // set player count on scoreboard
         updateScoreboards();
 
-        // refresh guis
-//        CustomGui.reloadAll();
+        // update database
+        Spells.db.setServerInDatabase();
 
         return null;
     }
@@ -396,6 +399,9 @@ public class Game {
 
         // set player count on scoreboard
         updateScoreboards();
+
+        // update database
+        Spells.db.setServerInDatabase();
     }
 
     TextComponent getLeaveMessage(Player player) {

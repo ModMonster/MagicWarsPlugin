@@ -16,6 +16,11 @@ import java.util.Map;
 
 public class StartingGameState extends GameState {
     @Override
+    public String getName() {
+        return "STARTING";
+    }
+
+    @Override
     public void setState(Game game) {
         game.startingCountdown = 11;
 

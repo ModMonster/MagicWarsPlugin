@@ -18,6 +18,11 @@ import org.bukkit.util.Vector;
 
 public class ActiveGameState extends GameState {
     @Override
+    public String getName() {
+        return "ACTIVE";
+    }
+
+    @Override
     public void setState(Game game) {
         for (Player player : game.playersInGame) {
             // add alive players and make them fall proof

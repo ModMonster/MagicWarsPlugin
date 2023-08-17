@@ -6,6 +6,11 @@ import org.bukkit.entity.Player;
 
 public class WaitingGameState extends GameState {
     @Override
+    public String getName() {
+        return "WAITING";
+    }
+
+    @Override
     public void setState(Game game) {
 
     }

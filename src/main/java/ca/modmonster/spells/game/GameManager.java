@@ -190,9 +190,9 @@ public class GameManager {
     static void createGame(WorldMap map) {
         ActiveWorld world = new ActiveWorld(map);
         Game game = new Game(world);
+        activeGame = game;
+
         game.world.load();
         game.setState(new WaitingGameState());
-
-        activeGame = game;
     }
 }

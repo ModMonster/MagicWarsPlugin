@@ -1,5 +1,14 @@
+# server id number
+id: 1
+
 # lobby server name
 lobby-server: "lobby"
+
+# mysql database info
+db-url: "localhost"
+db-user: "root"
+db-password: ""
+db-database: "monster_network"
 
 # ===================================================
 # Events that take place during the game
