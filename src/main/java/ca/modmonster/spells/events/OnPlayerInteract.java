@@ -28,6 +28,7 @@ public class OnPlayerInteract implements Listener {
         ItemMeta itemMeta = event.getItem().getItemMeta();
         if (!itemMeta.equals(GameManager.getLobbyCompassUsableInWorld().getItemMeta())) return;
 
+        player.sendMessage(Utilities.getStatusMessage(Utilities.StatusMessageType.TELEPORT, "Sending you to &lLobby"));
         Utilities.bungeeServerSend(player, Spells.mainConfig.getString("lobby-server"));
     }
 

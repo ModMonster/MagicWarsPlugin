@@ -4,6 +4,7 @@ import ca.modmonster.spells.command.enchantments.EnchantmentsCommand;
 import ca.modmonster.spells.command.magicwars.MagicWarsCommand;
 import ca.modmonster.spells.command.spells.SpellsCommand;
 import ca.modmonster.spells.database.DatabaseManager;
+import ca.modmonster.spells.database.models.ServerModel;
 import ca.modmonster.spells.events.*;
 import ca.modmonster.spells.game.GameManager;
 import ca.modmonster.spells.game.LootChest;
@@ -90,6 +91,7 @@ public final class Spells extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new OnXpGain(), this);
         getServer().getPluginManager().registerEvents(new OnPlayerTeleport(), this);
         getServer().getPluginManager().registerEvents(new OnDropItem(), this);
+        getServer().getPluginManager().registerEvents(new OnWeatherChange(), this);
 
         // register commands
         this.getCommand("spell").setExecutor(new SpellsCommand());
@@ -167,6 +169,16 @@ public final class Spells extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        // set server as offline in database
+        ServerModel server = db.getServerModel();
+        server.setState("OFFLINE");
+
+        try {
+            db.updateDatabase(server);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
         GameManager.activeGame.world.unload();
         super.onDisable();
     }

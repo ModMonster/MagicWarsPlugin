@@ -5,10 +5,12 @@ import ca.modmonster.spells.item.enchantment.ArmorEnchantment;
 import ca.modmonster.spells.item.enchantment.EnchantmentManager;
 import ca.modmonster.spells.item.enchantment.EnchantmentType;
 import ca.modmonster.spells.util.Utilities;
+import net.kyori.adventure.text.Component;
 import org.bukkit.*;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 
 import java.util.Collections;
@@ -51,8 +53,9 @@ public class EnderInfusedEnchantment extends ArmorEnchantment {
         entity.getWorld().playSound(entity.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1, 1);
 
         // remove enchantment
-        entity.getEquipment().getChestplate().removeEnchantment(Enchantment.getByKey(NamespacedKey.minecraft("ender_infused")));
-        EnchantmentManager.updateEnchantedItemLore(entity.getEquipment().getChestplate());
+        ItemMeta chestplateMeta = entity.getEquipment().getChestplate().getItemMeta();
+        chestplateMeta.removeEnchant(Enchantment.getByKey(NamespacedKey.minecraft("ender_infused")));
+        entity.getEquipment().getChestplate().setItemMeta(chestplateMeta);
 
         event.setCancelled(true); // cancel death
     }

@@ -35,7 +35,7 @@ public class DatabaseManager {
             Spells.main.getConfig().getInt("id"),
             GameManager.activeGame.state.getName(),
             GameManager.activeGame.world.map.name,
-            Spells.main.getServer().getOnlinePlayers().size(),
+            GameManager.activeGame.playersInGame.size(),
             GameManager.activeGame.world.map.maxPlayerCount,
             GameManager.activeGame.alivePlayers.size(),
             0
@@ -50,37 +50,30 @@ public class DatabaseManager {
                 // new server that needs to be registered to the database
                 sendModelToDatabase(getServerModel());
             } else {
-                updateDatabase();
+                updateDatabase(getServerModel());
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    private void updateDatabase() {
-        try {
-            PreparedStatement statement = getConnection()
-                .prepareStatement("UPDATE magic_wars SET state = ?, map = ?, players = ?, max_players = ?, alive = ?, time_remaining = ? WHERE id = ?");
+    public void updateDatabase(ServerModel server) throws SQLException {
+        PreparedStatement statement = getConnection()
+            .prepareStatement("UPDATE magic_wars SET state = ?, map = ?, players = ?, max_players = ?, alive = ?, time_remaining = ? WHERE id = ?");
 
-            ServerModel server = getServerModel();
+        statement.setString(1, server.getState());
+        statement.setString(2, server.getMap());
+        statement.setInt(3, server.getPlayerCount());
+        statement.setInt(4, server.getMaxPlayers());
+        statement.setInt(5, server.getAliveCount());
+        statement.setInt(6, server.getTimeRemaining());
+        statement.setInt(7, server.getId());
 
-            statement.setString(1, server.getState());
-            statement.setString(2, server.getMap());
-            statement.setInt(3, server.getPlayerCount());
-            statement.setInt(4, server.getMaxPlayers());
-            statement.setInt(5, server.getAliveCount());
-            statement.setInt(6, server.getTimeRemaining());
-            statement.setInt(7, server.getId());
-
-            statement.executeUpdate();
-            statement.close();
-        } catch (SQLException e) {
-            Spells.main.getLogger().severe("Failed to update database!");
-            e.printStackTrace();
-        }
+        statement.executeUpdate();
+        statement.close();
     }
 
-    public void sendModelToDatabase(ServerModel server) throws SQLException {
+    private void sendModelToDatabase(ServerModel server) throws SQLException {
         PreparedStatement statement = getConnection()
             .prepareStatement("INSERT INTO magic_wars(id, state, map, players, max_players, alive, time_remaining) VALUES(?, ?, ?, ?, ?, ?, ?)");
 

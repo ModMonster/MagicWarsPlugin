@@ -40,6 +40,7 @@ public class OnInventoryClick implements Listener {
         ItemMeta itemMeta = event.getCurrentItem().getItemMeta();
         if (!itemMeta.equals(GameManager.getLobbyCompass().getItemMeta()) && !itemMeta.equals(GameManager.getLobbyCompassUsableInWorld().getItemMeta())) return;
 
+        player.sendMessage(Utilities.getStatusMessage(Utilities.StatusMessageType.TELEPORT, "Sending you to &lLobby"));
         Utilities.bungeeServerSend(player, Spells.mainConfig.getString("lobby-server"));
     }
 
