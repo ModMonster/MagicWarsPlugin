@@ -1,6 +1,7 @@
 package ca.modmonster.spells.item.spell.spells;
 
 import ca.modmonster.spells.Spells;
+import ca.modmonster.spells.game.GameManager;
 import ca.modmonster.spells.item.Rarity;
 import ca.modmonster.spells.item.spell.*;
 import org.bukkit.Material;
@@ -104,7 +105,7 @@ class FluffyCloudOnClick extends Ability {
                 player.getWorld().spawnParticle(Particle.CLOUD, player.getLocation().subtract(new Vector(0, 0.5, 0)), 10, 1, 0, 1, 0);
 
                 //noinspection deprecation
-                if (tickCounter[0] >= 20 && player.isOnGround()) {
+                if (tickCounter[0] >= 20 && player.isOnGround() || !GameManager.activeGame.isAlive(player)) {
                     player.removePotionEffect(PotionEffectType.SLOW_FALLING);
                     cancel();
                 }

@@ -146,6 +146,9 @@ public class Game {
         filledCages.clear();
         nextEventIndex = 0;
         time = 0;
+        firstPlace = null;
+        secondPlace = null;
+        thirdPlace = null;
 
         // stop event timer
         if (eventTimerRunnable != null) {

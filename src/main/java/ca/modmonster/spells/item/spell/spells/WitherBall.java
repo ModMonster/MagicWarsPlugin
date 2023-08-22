@@ -120,7 +120,8 @@ class WitherBallSpellOnClick extends Ability {
                 for (Entity entity : skull.getNearbyEntities(3, 3, 3)) {
                     if (!(entity instanceof LivingEntity)) continue;
                     if (entity.equals(player)) continue;
-                    if (Minion.getMinionOwner(entity).equals(player)) continue;
+                    Player minionOwner = Minion.getMinionOwner(entity);
+                    if (minionOwner != null && minionOwner.equals(player)) continue;
                     LivingEntity livingEntity = (LivingEntity) entity;
                     if (livingEntity.hasPotionEffect(PotionEffectType.WITHER)) continue;
 
