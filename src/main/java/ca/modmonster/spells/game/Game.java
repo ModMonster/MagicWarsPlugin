@@ -18,6 +18,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.title.Title;
 import org.bukkit.*;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
@@ -157,6 +158,9 @@ public class Game {
 
         // reset game
         for (Player player : Bukkit.getOnlinePlayers()) {
+            player.setHealth(Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_MAX_HEALTH)).getValue());
+            player.setFireTicks(0);
+            player.clearActivePotionEffects();
             Utilities.bungeeServerSend(player, Spells.mainConfig.getString("lobby-server"));
         }
 
