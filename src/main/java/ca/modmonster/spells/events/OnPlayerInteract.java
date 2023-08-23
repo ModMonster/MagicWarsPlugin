@@ -2,7 +2,6 @@ package ca.modmonster.spells.events;
 
 import ca.modmonster.spells.Spells;
 import ca.modmonster.spells.game.GameManager;
-import ca.modmonster.spells.gui.EnchanterGui;
 import ca.modmonster.spells.item.spell.*;
 import ca.modmonster.spells.util.Utilities;
 import org.bukkit.Material;
@@ -17,8 +16,7 @@ public class OnPlayerInteract implements Listener {
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
         useSpells(event);
-        handleCustomEnchantingTable(event);
-        preventOpeningGrindstone(event);
+        preventUsingBlockEntities(event);
         doLobbyCompass(event);
     }
 
@@ -32,21 +30,10 @@ public class OnPlayerInteract implements Listener {
         Utilities.bungeeServerSend(player, Spells.mainConfig.getString("lobby-server"));
     }
 
-    void preventOpeningGrindstone(PlayerInteractEvent event) {
+    void preventUsingBlockEntities(PlayerInteractEvent event) {
         if (event.getClickedBlock() == null) return;
-        if (!event.getClickedBlock().getType().equals(Material.GRINDSTONE)) return;
-
-        event.setCancelled(true);
-    }
-
-    void handleCustomEnchantingTable(PlayerInteractEvent event) {
-        if (event.getClickedBlock() == null) return;
-        if (!event.getClickedBlock().getType().equals(Material.ENCHANTING_TABLE)) return;
-        if (!event.getAction().isRightClick()) return;
-        if (event.getPlayer().isSneaking() && event.getItem() != null && !event.getItem().getType().isAir()) return;
-
-        // open gui
-        new EnchanterGui().openInventory(event.getPlayer());
+        if (event.getClickedBlock().getType().equals(Material.CHEST)) return;
+        if (!event.getClickedBlock().getType().isInteractable()) return;
 
         event.setCancelled(true);
     }

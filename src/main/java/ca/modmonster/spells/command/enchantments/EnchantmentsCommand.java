@@ -2,7 +2,6 @@ package ca.modmonster.spells.command.enchantments;
 
 import ca.modmonster.spells.command.Subcommand;
 import ca.modmonster.spells.command.enchantments.commands.BrowseCommand;
-import ca.modmonster.spells.command.enchantments.commands.EnchantCommand;
 import ca.modmonster.spells.command.enchantments.commands.GiveCommand;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -21,7 +20,6 @@ public class EnchantmentsCommand implements CommandExecutor, TabCompleter {
     static final Map<String, Subcommand> subcommands = new HashMap<String, Subcommand>() {
         {
             put("give", new GiveCommand());
-            put("enchant", new EnchantCommand());
             put("browse", new BrowseCommand());
         }
     };

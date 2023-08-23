@@ -3,6 +3,7 @@ package ca.modmonster.spells.item.enchantment;
 import org.bukkit.Material;
 import org.bukkit.enchantments.EnchantmentTarget;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -41,6 +42,6 @@ public enum EnchantmentType {
                 return Arrays.asList(Material.LEATHER_BOOTS, Material.IRON_BOOTS, Material.GOLDEN_BOOTS, Material.CHAINMAIL_BOOTS, Material.DIAMOND_BOOTS, Material.NETHERITE_BOOTS);
         }
 
-        return null;
+        return new ArrayList<>();
     }
 }

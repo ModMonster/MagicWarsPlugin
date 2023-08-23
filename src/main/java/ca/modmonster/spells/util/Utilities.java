@@ -404,6 +404,10 @@ public class Utilities {
         Location lowestCorner = new Location(location.getWorld(), worldBorderCenter.getX() - worldBorderSize, 0, worldBorderCenter.getZ() - worldBorderSize);
         Location highestCorner = new Location(location.getWorld(), worldBorderCenter.getX() + worldBorderSize, 0, worldBorderCenter.getZ() + worldBorderSize);
 
+        if (location.getY() < 0) {
+            return false;
+        }
+
         return location.getX() >= lowestCorner.getX() && location.getX() <= highestCorner.getX() && location.getZ() >= lowestCorner.getZ() && location.getZ() <= highestCorner.getZ();
     }
 

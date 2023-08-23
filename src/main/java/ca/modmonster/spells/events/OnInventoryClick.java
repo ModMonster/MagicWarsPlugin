@@ -6,8 +6,16 @@ import ca.modmonster.spells.game.GameManager;
 import ca.modmonster.spells.game.LootChest;
 import ca.modmonster.spells.gui.BrowseEnchantmentsGui;
 import ca.modmonster.spells.gui.BrowseSpellsGui;
-import ca.modmonster.spells.gui.EnchanterGui;
+import ca.modmonster.spells.item.enchantment.CustomEnchantment;
+import ca.modmonster.spells.item.enchantment.EnchantmentManager;
+import ca.modmonster.spells.util.PlaySound;
 import ca.modmonster.spells.util.Utilities;
+import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
+import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -15,23 +23,68 @@ import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
+
+import java.util.List;
 
 public class OnInventoryClick implements Listener {
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
-        if (event.getAction().equals(InventoryAction.NOTHING)) return;
-
+        handleEnchanting(event);
         BrowseSpellsGui.onClick(event);
         BrowseEnchantmentsGui.onClick(event);
         handleBlockedSlots(event);
-        EnchanterGui.onClick(event);
         handleRemovingEquipArmorLore(event);
         handleAutoEquippingArmor(event);
 
         handleTrashSlot(event);
         doLobbyCompass(event);
+    }
+
+    void handleEnchanting(InventoryClickEvent event) {
+        if (!(event.getWhoClicked() instanceof Player)) return;
+        Player player = (Player) event.getWhoClicked();
+
+        ItemStack itemOnCursor = player.getItemOnCursor();
+        if (!(itemOnCursor.getItemMeta() instanceof EnchantmentStorageMeta)) return;
+
+        ItemStack clickedItem = event.getCurrentItem();
+        if (clickedItem == null || clickedItem.getType().equals(Material.AIR)) return;
+        if (clickedItem.getItemMeta().equals(Game.blockerStack.getItemMeta())) return;
+        if (clickedItem.getItemMeta().equals(Game.trashStack.getItemMeta())) {
+            return;
+        }
+
+        event.setCancelled(true);
+
+        EnchantmentStorageMeta bookMeta = (EnchantmentStorageMeta) itemOnCursor.getItemMeta();
+        Enchantment bookEnchantment = bookMeta.getStoredEnchants().keySet().stream().findFirst().get();
+        CustomEnchantment bookCustomEnchantment = EnchantmentManager.getEnchantmentFromBukkit(bookEnchantment);
+
+        assert bookCustomEnchantment != null;
+        List<Material> applicableMaterials = bookCustomEnchantment.type.getEnchantableMaterials();
+
+        // item in item slot isn't applicable to enchantment
+        if (!applicableMaterials.contains(clickedItem.getType())) {
+            PlaySound.error(player);
+            return;
+        }
+
+        // enchantment conflicts with existing enchantment
+        for (Enchantment enchantment : clickedItem.getEnchantments().keySet()) {
+            CustomEnchantment customEnchantment = EnchantmentManager.getEnchantmentFromBukkit(enchantment);
+            if (customEnchantment == null) continue;
+            if (customEnchantment.conflictsWith(bookCustomEnchantment)) {
+                PlaySound.error(player);
+                return;
+            }
+        }
+
+        EnchantmentManager.enchantItem(clickedItem, bookMeta.getStoredEnchants()); // set enchantments on item
+        player.setItemOnCursor(null); // delete book
     }
 
     void doLobbyCompass(InventoryClickEvent event) {
@@ -45,6 +98,7 @@ public class OnInventoryClick implements Listener {
     }
 
     void handleRemovingEquipArmorLore(InventoryClickEvent event) {
+        if (event.getWhoClicked().getGameMode().equals(GameMode.SPECTATOR)) return;
         ItemStack item = event.getCurrentItem();
         if (item == null) return;
         if (item.lore() == null) return;
@@ -62,6 +116,7 @@ public class OnInventoryClick implements Listener {
 
         if (item == null) return;
         if (!Utilities.isMaterialArmor(item.getType())) return;
+        if (player.getGameMode().equals(GameMode.SPECTATOR)) return;
 
         EquipmentSlot armorSlot = Utilities.getArmorEquipmentSlotOfMaterial(item.getType());
         if (armorSlot == null) return;

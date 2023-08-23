@@ -98,11 +98,7 @@ public class InvisibilityManager {
         for (Player entity1 : entity.getWorld().getPlayers()) {
             if (entity1.equals(entity)) continue;
 
-            try {
-                ProtocolLibrary.getProtocolManager().sendServerPacket(entity1, packetContainer);
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
-            }
+            ProtocolLibrary.getProtocolManager().sendServerPacket(entity1, packetContainer);
         }
     }
 
@@ -119,11 +115,7 @@ public class InvisibilityManager {
         for (Player entity1 : entity.getWorld().getPlayers()) {
             if (entity1.equals(entity)) continue;
 
-            try {
-                ProtocolLibrary.getProtocolManager().sendServerPacket(entity1, packetContainer, false);
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
-            }
+            ProtocolLibrary.getProtocolManager().sendServerPacket(entity1, packetContainer, false);
         }
     }
 

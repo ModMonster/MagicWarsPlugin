@@ -16,7 +16,7 @@ public class SpawnLootCommand extends Subcommand {
     public void onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         // set chest at player's location
         if (args.length == 1) {
-            LootChest.spawnLootChest(((Player) sender).getWorld(), new LootChest(((Player) sender).getTargetBlock(4).getLocation().toVector(), true), true);
+            LootChest.spawnLootChest(((Player) sender).getWorld(), new LootChest(((Player) sender).getTargetBlockExact(4).getLocation().toVector(), true), true);
         }
 
     }

@@ -6,8 +6,10 @@ import ca.modmonster.spells.item.spell.SpellManager;
 import ca.modmonster.spells.item.spell.spells.ReturnPearl;
 import ca.modmonster.spells.util.PlaySound;
 import ca.modmonster.spells.util.Utilities;
+import org.bukkit.Bukkit;
 import org.bukkit.EntityEffect;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -34,7 +36,8 @@ public class OnProjectileHit implements Listener {
         if (!(hit instanceof LivingEntity)) return;
         LivingEntity hitLiving = (LivingEntity) event.getHitEntity();
 
-        hitLiving.playEffect(EntityEffect.HURT); // show hit effect
+        hitLiving.playHurtAnimation(100);
+        hitLiving.getWorld().playSound(hitLiving.getLocation(), Sound.ENTITY_PLAYER_HURT, 1, 1);
 
         // add knockback
         Vector launchDirection = hitLiving.getLocation().toVector().add(projectile.getLocation().toVector().multiply(-1));
