@@ -32,6 +32,6 @@ public class ZombieMinion extends Minion {
 
     @Override
     public int getCooldown() {
-        return 160;
+        return 80;
     }
 }
