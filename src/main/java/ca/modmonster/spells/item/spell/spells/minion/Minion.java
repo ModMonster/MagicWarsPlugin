@@ -19,10 +19,10 @@ import java.util.*;
 
 public abstract class Minion extends Spell {
     public static final Map<Entity, UUID> playerMinions = new HashMap<>();
-    public static List<Minion> minionTypes = new ArrayList<>();
     public abstract String getMinionId();
     public abstract String getMinionName();
     public abstract EntityType getMinionEntityType();
+    public abstract int getCooldown();
 
     @Override
     public String getId() {
@@ -57,14 +57,18 @@ public abstract class Minion extends Spell {
     @Override
     public List<Ability> getAbilities() {
         return Arrays.asList(
-            new MinionClickAbility(getMinionId(), getMinionName(), getMinionEntityType()),
+            new MinionClickAbility(getMinionId(), getMinionName(), getMinionEntityType(), getCooldown()),
             new MinionShiftClickAbility(getMinionName())
         );
     }
 
     @Override
     public List<Material> getLinkedCooldowns() {
-        return null;
+        return Arrays.asList(
+            Material.ZOMBIE_SPAWN_EGG,
+            Material.SKELETON_SPAWN_EGG,
+            Material.WITHER_SKELETON_SPAWN_EGG
+        );
     }
 
     @Override
@@ -148,12 +152,14 @@ class MinionClickAbility extends Ability {
     final String minionId;
     final String minionName;
     final EntityType minionType;
+    final int cooldown;
 
-    public MinionClickAbility(String minionId, String minionName, EntityType minionType) {
+    public MinionClickAbility(String minionId, String minionName, EntityType minionType, int cooldown) {
         super(ClickType.CLICK, ClickBlockType.NONE, ShiftType.NOSHIFT);
         this.minionId = minionId;
         this.minionType = minionType;
         this.minionName = minionName;
+        this.cooldown = cooldown;
     }
 
     @Override
@@ -212,7 +218,7 @@ class MinionClickAbility extends Ability {
 
     @Override
     public Integer getCooldown(Power power) {
-        return 80;
+        return cooldown;
     }
 }
 

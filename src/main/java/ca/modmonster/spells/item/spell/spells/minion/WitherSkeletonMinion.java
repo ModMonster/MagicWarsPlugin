@@ -29,4 +29,9 @@ public class WitherSkeletonMinion extends Minion {
     public EntityType getMinionEntityType() {
         return EntityType.WITHER_SKELETON;
     }
+
+    @Override
+    public int getCooldown() {
+        return 160;
+    }
 }

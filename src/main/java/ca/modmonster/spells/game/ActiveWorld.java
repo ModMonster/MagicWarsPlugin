@@ -59,28 +59,6 @@ public class ActiveWorld {
         for (LootChest chest : map.chestLocations) {
             LootChest.spawnLootChest(bukkitWorld, chest, false);
         }
-
-        // add enchantment table to random chest
-        LootChest enchantmentTableChest = Utilities.getRandomEntryInArray(map.chestLocations);
-
-        Location location = Utilities.vectorToBlockLocation(bukkitWorld, enchantmentTableChest.location);
-        if (!(location.getBlock().getState() instanceof Chest)) return;
-
-        Inventory chestInventory = ((Chest) location.getBlock().getState()).getBlockInventory();
-
-        // get valid slots to add enchanting table
-        List<Integer> validItemSlots = new ArrayList<>();
-        for (int i = 0; i < 27; i++) {
-            ItemStack item = chestInventory.getItem(i);
-
-            if (item != null) continue;
-            validItemSlots.add(i);
-        }
-
-        // add enchanting table
-        if (validItemSlots.size() == 0) return;
-        int chosenSlot = Utilities.getRandomEntryInArray(validItemSlots);
-        chestInventory.setItem(chosenSlot, new ItemStack(Material.ENCHANTING_TABLE));
     }
 
     public void unload() {

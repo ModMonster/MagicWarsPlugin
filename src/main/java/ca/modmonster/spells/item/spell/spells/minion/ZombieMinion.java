@@ -29,4 +29,9 @@ public class ZombieMinion extends Minion {
     public EntityType getMinionEntityType() {
         return EntityType.ZOMBIE;
     }
+
+    @Override
+    public int getCooldown() {
+        return 160;
+    }
 }

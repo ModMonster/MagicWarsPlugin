@@ -29,4 +29,9 @@ public class SkeletonMinion extends Minion {
     public EntityType getMinionEntityType() {
         return EntityType.SKELETON;
     }
+
+    @Override
+    public int getCooldown() {
+        return 80;
+    }
 }
