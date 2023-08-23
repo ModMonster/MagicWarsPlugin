@@ -8,22 +8,17 @@ import ca.modmonster.spells.gui.BrowseEnchantmentsGui;
 import ca.modmonster.spells.gui.BrowseSpellsGui;
 import ca.modmonster.spells.item.enchantment.CustomEnchantment;
 import ca.modmonster.spells.item.enchantment.EnchantmentManager;
+import ca.modmonster.spells.item.spell.SpellManager;
 import ca.modmonster.spells.util.PlaySound;
 import ca.modmonster.spells.util.Utilities;
-import net.kyori.adventure.text.Component;
-import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
-
 import org.bukkit.inventory.EquipmentSlot;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -53,6 +48,7 @@ public class OnInventoryClick implements Listener {
 
         ItemStack clickedItem = event.getCurrentItem();
         if (clickedItem == null || clickedItem.getType().equals(Material.AIR)) return;
+        if (SpellManager.isSpell(clickedItem)) return;
         if (clickedItem.getItemMeta().equals(Game.blockerStack.getItemMeta())) return;
         if (clickedItem.getItemMeta().equals(Game.trashStack.getItemMeta())) {
             return;
