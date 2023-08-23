@@ -112,15 +112,14 @@ public class StartingGameState extends GameState {
     public void updateScoreboard(BetterScoreboard board, Game game, Player player) {
         board.resetLines();
         board.addStaticLine("");
-        board.addStaticLine("&6&lStatus");
-        board.addStaticLine("&eStarting in " + game.startingCountdown + "s");
+        board.addStaticLine(" &6&lStatus");
+        board.addStaticLine(" &eStarting in " + game.startingCountdown + "s");
         board.addStaticLine(" ");
-        board.addStaticLine("&6&lPlayers");
-        board.addStaticLine("&e" + game.playersInGame.size() + " / " + game.world.map.maxPlayerCount);
+        board.addStaticLine(" &6&lPlayers");
+        board.addStaticLine(" &e" + game.playersInGame.size() + " / " + game.world.map.maxPlayerCount);
         board.addStaticLine("  ");
-        board.addStaticLine("&6&lMap");
-        board.addStaticLine("&e" + game.world.map.name);
+        board.addStaticLine(" &6&lMap: &e" + game.world.map.name);
         board.addStaticLine("   ");
-        board.addStaticLine("    &3mc.modmonster.ca ");
+        board.addStaticLine("    &3mc.modmonster.ca    ");
     }
 }

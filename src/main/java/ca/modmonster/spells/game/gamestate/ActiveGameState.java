@@ -99,26 +99,17 @@ public class ActiveGameState extends GameState {
             GameEvent event = GameManager.events.get(game.nextEventIndex);
 
             board.addStaticLine("");
-            board.addStaticLine("&6&lNext Events");
-            board.addStaticLine("&e" + event.getName() + " &8" + Icons.DOT + "&e " + timeUntilEvent(game, event));
-        }
-
-        if (game.nextEventIndex < GameManager.events.size() - 1) {
-            GameEvent event = GameManager.events.get(game.nextEventIndex + 1);
-
-            board.addStaticLine("&e" + event.getName() + " &8" + Icons.DOT + "&e " + timeUntilEvent(game, event));
+            board.addStaticLine(" &6&lNext Event");
+            board.addStaticLine(" &e ▶ " + event.getName() + " &8- &e" + timeUntilEvent(game, event));
         }
 
         board.addStaticLine(" ");
-        board.addStaticLine("&6&lAlive");
-        board.addStaticLine("&e" + game.alivePlayers.size() + " / " + game.world.map.maxPlayerCount);
+        board.addStaticLine(" &6&lAlive");
+        board.addStaticLine(" &e" + game.alivePlayers.size() + " / " + game.world.map.maxPlayerCount);
         board.addStaticLine("  ");
-        board.addStaticLine("&6&lKills");
-        board.addStaticLine("&e" + game.kills.getOrDefault(player, 0));
+        board.addStaticLine(" &6&lKills: &e" + game.kills.getOrDefault(player, 0));
+        board.addStaticLine(" &6&lMap: &e" + game.world.map.name);
         board.addStaticLine("   ");
-        board.addStaticLine("&6&lMap");
-        board.addStaticLine("&e" + game.world.map.name);
-        board.addStaticLine("    ");
-        board.addStaticLine("    &3mc.modmonster.ca ");
+        board.addStaticLine("    &3mc.modmonster.ca    ");
     }
 }
