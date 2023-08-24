@@ -58,6 +58,7 @@ maps:
 #      world: magic_games-forest # world name / path within /maps
 #      map-size: 184 # size of map in radius (for worldborder)
 #      pod-size: [1, 1, 1, 1, 3, 1] # size of the spawn pod that will be deleted [negative-x, negative-y, negative-z, positive-x, positive-y, positive-z]
+#      max-build-height: 140 # maximum building height before block place will be cancelled
 #      chest-locations: # locations for all the chests on the map
 #        - [-572, 117, -2755, false]
 #        - [-571, 117, -2754, false]

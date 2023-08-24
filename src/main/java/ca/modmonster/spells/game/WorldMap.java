@@ -16,8 +16,9 @@ public class WorldMap {
     public final List<LootChest> chestLocations;
     public final Integer minPlayerCount;
     public final Integer maxPlayerCount;
+    public final Integer maxBuildHeight;
 
-    public WorldMap(String id, String name, List<Integer> podSize, File sourceWorldFolder, int worldBorderSize, Vector spawnFacingLocation, List<Vector> podLocations, List<LootChest> chestLocations, Integer minPlayerCount, Integer maxPlayerCount) {
+    public WorldMap(String id, String name, List<Integer> podSize, File sourceWorldFolder, int worldBorderSize, Vector spawnFacingLocation, List<Vector> podLocations, List<LootChest> chestLocations, Integer minPlayerCount, Integer maxPlayerCount, Integer maxBuildHeight) {
         this.id = id;
         this.name = name;
         this.podSize = podSize;
@@ -28,5 +29,6 @@ public class WorldMap {
         this.chestLocations = chestLocations;
         this.minPlayerCount = minPlayerCount;
         this.maxPlayerCount = maxPlayerCount;
+        this.maxBuildHeight = maxBuildHeight;
     }
 }

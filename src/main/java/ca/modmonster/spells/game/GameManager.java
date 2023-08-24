@@ -184,7 +184,8 @@ public class GameManager {
                     spawnLocations,
                     chestLocations,
                     (int) entry.getValue().get("min-players"),
-                    (int) entry.getValue().get("max-players")
+                    (int) entry.getValue().get("max-players"),
+                    (int) entry.getValue().get("max-build-height")
                 );
 
                 maps.add(worldMap);
