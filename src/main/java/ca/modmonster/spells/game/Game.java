@@ -144,9 +144,6 @@ public class Game {
 
         // reset game
         for (Player player : Bukkit.getOnlinePlayers()) {
-            player.setHealth(Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_MAX_HEALTH)).getValue());
-            player.setFireTicks(0);
-            player.clearActivePotionEffects();
             Utilities.bungeeServerSend(player, Spells.mainConfig.getString("lobby-server"));
         }
 
@@ -251,6 +248,11 @@ public class Game {
         if (state == null) return "Still loading game, try again in a few seconds!";
         if (!(state instanceof WaitingGameState) && !(state instanceof WaitingStartingGameState)) return "Game is currently in an unjoinable state (" + state.getClass().getSimpleName() + ")!";
         if (playersInGame.size() >= world.map.maxPlayerCount) return "All player slots in this game are taken!";
+
+        // reset player stats
+        player.setHealth(Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_MAX_HEALTH)).getValue());
+        player.setFireTicks(0);
+        player.clearActivePotionEffects();
 
         // add player to list
         playersInGame.add(player);

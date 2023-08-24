@@ -93,6 +93,7 @@ public final class Spells extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new OnDropItem(), this);
         getServer().getPluginManager().registerEvents(new OnWeatherChange(), this);
         getServer().getPluginManager().registerEvents(new OnBlockPlace(), this);
+        getServer().getPluginManager().registerEvents(new OnItemSpawn(), this);
 
         // register commands
         this.getCommand("spell").setExecutor(new SpellsCommand());
@@ -164,8 +165,8 @@ public final class Spells extends JavaPlugin {
         GameManager.adjectives = deathSection.getStringList("adjectives");
         GameManager.verbs = deathSection.getStringList("verbs");
 
-        GameManager.init();
         LootChest.init();
+        GameManager.init();
     }
 
     @Override

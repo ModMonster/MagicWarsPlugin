@@ -534,6 +534,7 @@ public class Utilities {
             case IRON_HELMET:
             case DIAMOND_HELMET:
             case NETHERITE_HELMET:
+            case TURTLE_HELMET:
                 return EquipmentSlot.HEAD;
             case LEATHER_CHESTPLATE:
             case CHAINMAIL_CHESTPLATE:
@@ -541,6 +542,7 @@ public class Utilities {
             case IRON_CHESTPLATE:
             case DIAMOND_CHESTPLATE:
             case NETHERITE_CHESTPLATE:
+            case ELYTRA:
                 return EquipmentSlot.CHEST;
             case LEATHER_LEGGINGS:
             case CHAINMAIL_LEGGINGS:

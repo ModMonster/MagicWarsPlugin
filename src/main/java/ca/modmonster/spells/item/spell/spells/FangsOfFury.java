@@ -3,6 +3,7 @@ package ca.modmonster.spells.item.spell.spells;
 import ca.modmonster.spells.Spells;
 import ca.modmonster.spells.item.Rarity;
 import ca.modmonster.spells.item.spell.*;
+import ca.modmonster.spells.util.Utilities;
 import org.bukkit.*;
 import org.bukkit.entity.*;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -78,7 +79,9 @@ public class FangsOfFury extends Spell {
     }
 
     static void spawnAndTagFang(Player player, Location location) {
-        EvokerFangs fang = (EvokerFangs) location.getWorld().spawnEntity(location, EntityType.EVOKER_FANGS);
+        Location groundLocation = Utilities.getHighestBlockYAtLocation(location);
+
+        EvokerFangs fang = (EvokerFangs) location.getWorld().spawnEntity(groundLocation, EntityType.EVOKER_FANGS);
         fang.setOwner(player);
     }
 }

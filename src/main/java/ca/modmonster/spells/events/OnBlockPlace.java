@@ -10,11 +10,6 @@ public class OnBlockPlace implements Listener {
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
         if (event.getPlayer().hasPermission("magicwars.breakblocks") && GameManager.allowedBuildingPlayers.contains(event.getPlayer())) return;
-
-        // prevent building too high
-        if (event.getBlockPlaced().getY() > GameManager.activeGame.world.map.maxBuildHeight) {
-            event.setCancelled(true);
-            event.getPlayer().sendActionBar(Utilities.stringToComponent("&cYou can't build this high!"));
-        }
+        event.setCancelled(true);
     }
 }
