@@ -57,6 +57,8 @@ public class EnderInfusedEnchantment extends ArmorEnchantment {
         chestplateMeta.removeEnchant(Enchantment.getByKey(NamespacedKey.minecraft("ender_infused")));
         entity.getEquipment().getChestplate().setItemMeta(chestplateMeta);
 
+        EnchantmentManager.updateEnchantedItemLore(entity.getEquipment().getChestplate());
+
         event.setCancelled(true); // cancel death
     }
 }
