@@ -26,7 +26,6 @@ public class WaitingGameState extends GameState {
     @Override
     public void updateScoreboard(FastBoard board, Game game, Player player) {
         board.updateLines(
-            Utilities.stringToComponent("&7    ⌚ " + new SimpleDateFormat("MMM d, h:mm a").format(new Date())),
             Component.empty(),
             Utilities.stringToComponent(" &6&lStatus"),
             Utilities.stringToComponent(" &eWaiting for players"),

@@ -1,11 +1,29 @@
 package ca.modmonster.spells.util;
 
+import ca.modmonster.spells.Spells;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
 
 public class PlaySound {
+    public static void storm(Player player) {
+        new BukkitRunnable() {
+            final float[] pitches = {0.5f, 0.6f, 0.7f, 0.75f};
+            int time = 0;
+
+            @Override
+            public void run() {
+                player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1, pitches[time]);
+                time += 1;
+                if (time >= pitches.length) {
+                    cancel();
+                }
+            }
+        }.runTaskTimer(Spells.main, 0, 2);
+    }
+
     public static void error(Player player) {
         player.playSound(player.getLocation(), Sound.ENTITY_BLAZE_HURT, 0.5f, 1);
     }

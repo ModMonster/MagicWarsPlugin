@@ -7,10 +7,12 @@ import ca.modmonster.spells.game.GameManager;
 import ca.modmonster.spells.game.gameevents.BorderShrinkGameEvent;
 import ca.modmonster.spells.game.gameevents.GameEvent;
 import ca.modmonster.spells.util.Icons;
+import ca.modmonster.spells.util.PlaySound;
 import ca.modmonster.spells.util.Utilities;
 import ca.modmonster.spells.util.betterscoreboard.BetterScoreboard;
 import fr.mrmicky.fastboard.adventure.FastBoard;
 import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -74,18 +76,19 @@ public class ActiveGameState extends GameState {
                 game.time += 1;
                 game.updateScoreboards();
 
-                // see if any events should be run
-                for (GameEvent event : GameManager.events) {
-                    if (!(event.timeToRun == game.time)) continue;
+                GameEvent nextEvent = GameManager.events.get(game.nextEventIndex);
 
-                    event.runEvent(game);
+                // see if any events should be run
+                if (nextEvent.timeToRun == game.time) {
+                    nextEvent.runEvent(game);
                     game.nextEventIndex += 1;
                 }
 
                 // storm warning
-                if (GameManager.events.get(game.nextEventIndex) instanceof BorderShrinkGameEvent) {
+                if (nextEvent instanceof BorderShrinkGameEvent && nextEvent.timeToRun == game.time + 10) {
                     for (Player player : game.playersInGame) {
-                        player.showDemoScreen();
+                        player.sendActionBar(Utilities.stringToComponent("&e&l[!] &cThe border will start to shrink in 10 seconds!"));
+                        PlaySound.storm(player);
                     }
                 }
             }
@@ -97,7 +100,7 @@ public class ActiveGameState extends GameState {
         int seconds = event.timeToRun - game.time;
 
         if (seconds >= 60) {
-            int minutes = (int) Math.floor(seconds / 60f);
+            int minutes = Math.round(seconds / 60f);
 
             return minutes + "m";
         }
@@ -108,8 +111,6 @@ public class ActiveGameState extends GameState {
     @Override
     public void updateScoreboard(FastBoard board, Game game, Player player) {
         List<Component> lines = new ArrayList<>();
-
-        lines.add(Utilities.stringToComponent("&7    ⌚ " + new SimpleDateFormat("MMM d, h:mm a").format(new Date())));
 
         if (game.nextEventIndex < GameManager.events.size()) {
             GameEvent event = GameManager.events.get(game.nextEventIndex);
