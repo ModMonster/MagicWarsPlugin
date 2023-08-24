@@ -32,7 +32,7 @@ public class OnPlayerInteract implements Listener {
 
     void preventUsingBlockEntities(PlayerInteractEvent event) {
         if (event.getClickedBlock() == null) return;
-        if (event.getClickedBlock().getType().equals(Material.CHEST)) return;
+        if (GameManager.blockInteractWhitelist.contains(event.getClickedBlock().getType())) return;
         if (!event.getClickedBlock().getType().isInteractable()) return;
 
         event.setCancelled(true);

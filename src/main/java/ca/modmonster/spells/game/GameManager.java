@@ -22,6 +22,7 @@ public class GameManager {
     public static final List<WorldMap> maps = new ArrayList<>();
     public static Game activeGame;
     public static final List<Material> blockBreakWhitelist = new ArrayList<>();
+    public static final List<Material> blockInteractWhitelist = new ArrayList<>();
     public static final List<Player> allowedBuildingPlayers = new ArrayList<>();
     public static final List<GameEvent> events = new ArrayList<>();
 
@@ -132,11 +133,15 @@ public class GameManager {
 
     static void initMapConfig() {
         // block break whitelist
-        @SuppressWarnings("unchecked")
-        List<String> blockBreakMaterialStrings = (List<String>) Spells.mapConfig.getList("block-break-whitelist");
-        assert blockBreakMaterialStrings != null;
+        List<String> blockBreakMaterialStrings = Spells.mapConfig.getStringList("block-break-whitelist");
         for (String block : blockBreakMaterialStrings) {
             blockBreakWhitelist.add(Material.valueOf(block));
+        }
+
+        // block interact whitelist
+        List<String> blockInteractMaterialStrings = Spells.mapConfig.getStringList("block-interact-whitelist");
+        for (String block : blockInteractMaterialStrings) {
+            blockInteractWhitelist.add(Material.valueOf(block));
         }
     }
 

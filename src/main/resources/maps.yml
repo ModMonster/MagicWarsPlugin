@@ -27,6 +27,30 @@ block-break-whitelist: # list of blocks to allow breaking
   - LILY_PAD
   - FERN
   - LARGE_FERN
+block-interact-whitelist:
+  - CHEST
+  - ACACIA_DOOR
+  - BAMBOO_DOOR
+  - BIRCH_DOOR
+  - CHERRY_DOOR
+  - CRIMSON_DOOR
+  - DARK_OAK_DOOR
+  - JUNGLE_DOOR
+  - MANGROVE_DOOR
+  - OAK_DOOR
+  - SPRUCE_DOOR
+  - WARPED_DOOR
+  - ACACIA_TRAPDOOR
+  - BAMBOO_TRAPDOOR
+  - BIRCH_TRAPDOOR
+  - CHERRY_TRAPDOOR
+  - CRIMSON_TRAPDOOR
+  - DARK_OAK_TRAPDOOR
+  - JUNGLE_TRAPDOOR
+  - MANGROVE_TRAPDOOR
+  - OAK_TRAPDOOR
+  - SPRUCE_TRAPDOOR
+  - WARPED_TRAPDOOR
 maps:
 #  Here is a map to demonstrate how to use this configuration.
 #  - forest:
