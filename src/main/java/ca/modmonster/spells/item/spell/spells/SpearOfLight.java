@@ -147,11 +147,11 @@ class SpearOfLightClickAbility extends Ability {
     int getDamage(Power power) {
         switch (power) {
             case WEAK:
-                return 6;
+                return 4;
             case STRONG:
-                return 7;
+                return 5;
             case POWERFUL:
-                return 8;
+                return 6;
             default:
                 return 0;
         }
@@ -164,6 +164,6 @@ class SpearOfLightClickAbility extends Ability {
 
     @Override
     public Integer getCooldown(Power power) {
-        return 5;
+        return 8;
     }
 }

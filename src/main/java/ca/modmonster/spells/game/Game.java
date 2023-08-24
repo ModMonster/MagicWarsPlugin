@@ -1,17 +1,15 @@
 package ca.modmonster.spells.game;
 
 import ca.modmonster.spells.Spells;
-import ca.modmonster.spells.database.DatabaseManager;
 import ca.modmonster.spells.events.OnEntityDamage;
 import ca.modmonster.spells.game.gamestate.*;
 import ca.modmonster.spells.item.spell.spells.minion.Minion;
 import ca.modmonster.spells.util.AnimationHelper;
 import ca.modmonster.spells.util.Icons;
-import ca.modmonster.spells.util.betterscoreboard.BetterScoreboard;
-import ca.modmonster.spells.util.betterscoreboard.ScoreboardManager;
 import ca.modmonster.spells.util.PlaySound;
 import ca.modmonster.spells.util.Utilities;
 import ca.modmonster.spells.util.betterscoreboard.animations.MagicGamesScoreboardTitleAnimation;
+import fr.mrmicky.fastboard.adventure.FastBoard;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -42,7 +40,7 @@ public class Game {
     public BukkitRunnable countdown = null;
     public final Map<Player, Integer> kills = new HashMap<>();
     public final Map<BukkitRunnable, Player> runningPlayerEvents = new HashMap<>();
-    final Map<Player, BetterScoreboard> boards = new HashMap<>();
+    final Map<Player, FastBoard> boards = new HashMap<>();
 
     public int nextEventIndex = 0;
     public int time = 0;
@@ -77,18 +75,6 @@ public class Game {
         );
     }
 
-    BetterScoreboard createScoreboard() {
-        TextComponent title = Component.text("   ", NamedTextColor.AQUA, TextDecoration.BOLD).
-                              append(Component.text("☆", NamedTextColor.DARK_AQUA)).
-                              append(Component.text(" MAGIC WARS ")).
-                              append(Component.text("☆", NamedTextColor.DARK_AQUA)).
-                              append(Component.text("   "));
-        BetterScoreboard board = ScoreboardManager.createNewBetterScoreboard(getId(), title);
-        board.addStaticLine("Error, you shouldn't be seeing this.");
-
-        return board;
-    }
-
     void startAnimatedScoreboardTitle() {
         final Integer[] index = {0};
         final AnimationHelper animation = new MagicGamesScoreboardTitleAnimation();
@@ -104,8 +90,8 @@ public class Game {
 
                 TextComponent component = animation.getLine(index[0]);
 
-                for (BetterScoreboard board : boards.values()) {
-                    board.setTitle(component);
+                for (FastBoard board : boards.values()) {
+                    board.updateTitle(component);
                 }
             }
         }.runTaskTimer(Spells.main, 0, 5);
@@ -128,7 +114,7 @@ public class Game {
 
     public void updateScoreboards() {
         for (Player player : boards.keySet()) {
-            BetterScoreboard board = boards.get(player);
+            FastBoard board = boards.get(player);
             state.updateScoreboard(board, this, player);
         }
     }
@@ -321,9 +307,8 @@ public class Game {
         }
 
         // create scoreboard
-        BetterScoreboard board = createScoreboard();
+        FastBoard board = new FastBoard(player);
         boards.put(player, board);
-        board.applyToPlayer(player);
 
         // set player count on scoreboard
         updateScoreboards();
@@ -345,7 +330,7 @@ public class Game {
 
         // remove from scoreboard
         if (boards.get(player) != null) {
-            boards.get(player)._unregister();
+            boards.get(player).delete();
             boards.remove(player);
         }
 

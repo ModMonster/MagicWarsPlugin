@@ -4,16 +4,24 @@ import ca.modmonster.spells.Spells;
 import ca.modmonster.spells.events.OnEntityDamage;
 import ca.modmonster.spells.game.Game;
 import ca.modmonster.spells.game.GameManager;
+import ca.modmonster.spells.game.gameevents.BorderShrinkGameEvent;
 import ca.modmonster.spells.game.gameevents.GameEvent;
 import ca.modmonster.spells.util.Icons;
 import ca.modmonster.spells.util.Utilities;
 import ca.modmonster.spells.util.betterscoreboard.BetterScoreboard;
+import fr.mrmicky.fastboard.adventure.FastBoard;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 
 public class ActiveGameState extends GameState {
@@ -73,6 +81,13 @@ public class ActiveGameState extends GameState {
                     event.runEvent(game);
                     game.nextEventIndex += 1;
                 }
+
+                // storm warning
+                if (GameManager.events.get(game.nextEventIndex) instanceof BorderShrinkGameEvent) {
+                    for (Player player : game.playersInGame) {
+                        player.showDemoScreen();
+                    }
+                }
             }
         };
         game.eventTimerRunnable.runTaskTimer(Spells.main, 20, 20);
@@ -83,33 +98,36 @@ public class ActiveGameState extends GameState {
 
         if (seconds >= 60) {
             int minutes = (int) Math.floor(seconds / 60f);
-            int remainingSeconds = seconds - minutes * 60;
 
-            return minutes + "m " + remainingSeconds + "s";
+            return minutes + "m";
         }
 
         return seconds + "s";
     }
 
     @Override
-    public void updateScoreboard(BetterScoreboard board, Game game, Player player) {
-        board.resetLines();
+    public void updateScoreboard(FastBoard board, Game game, Player player) {
+        List<Component> lines = new ArrayList<>();
+
+        lines.add(Utilities.stringToComponent("&7    ⌚ " + new SimpleDateFormat("MMM d, h:mm a").format(new Date())));
 
         if (game.nextEventIndex < GameManager.events.size()) {
             GameEvent event = GameManager.events.get(game.nextEventIndex);
 
-            board.addStaticLine("");
-            board.addStaticLine(" &6&lNext Event");
-            board.addStaticLine(" &e ▶ " + event.getName() + " &8- &e" + timeUntilEvent(game, event));
+            lines.add(Component.empty());
+            lines.add(Utilities.stringToComponent(" &6&lNext Event"));
+            lines.add(Utilities.stringToComponent(" &e" + event.getName() + " &8- &e" + timeUntilEvent(game, event)));
         }
 
-        board.addStaticLine(" ");
-        board.addStaticLine(" &6&lAlive");
-        board.addStaticLine(" &e" + game.alivePlayers.size() + " / " + game.world.map.maxPlayerCount);
-        board.addStaticLine("  ");
-        board.addStaticLine(" &6&lKills: &e" + game.kills.getOrDefault(player, 0));
-        board.addStaticLine(" &6&lMap: &e" + game.world.map.name);
-        board.addStaticLine("   ");
-        board.addStaticLine("    &3mc.modmonster.ca    ");
+        lines.add(Component.empty());
+        lines.add(Utilities.stringToComponent(" &6&lAlive"));
+        lines.add(Utilities.stringToComponent(" &e" + game.alivePlayers.size() + " / " + game.world.map.maxPlayerCount));
+        lines.add(Component.empty());
+        lines.add(Utilities.stringToComponent(" &6&lKills: &e" + game.kills.getOrDefault(player, 0)));
+        lines.add(Utilities.stringToComponent(" &6&lMap: &e" + game.world.map.name));
+        lines.add(Component.empty());
+        lines.add(Utilities.stringToComponent("    &3mc.modmonster.ca "));
+
+        board.updateLines(lines);
     }
 }
