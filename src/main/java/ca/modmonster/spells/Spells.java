@@ -92,6 +92,7 @@ public final class Spells extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new OnPlayerTeleport(), this);
         getServer().getPluginManager().registerEvents(new OnDropItem(), this);
         getServer().getPluginManager().registerEvents(new OnWeatherChange(), this);
+        getServer().getPluginManager().registerEvents(new OnBlockPlace(), this);
 
         // register commands
         this.getCommand("spell").setExecutor(new SpellsCommand());
