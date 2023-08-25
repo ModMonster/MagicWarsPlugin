@@ -80,6 +80,7 @@ public class ActiveGameState extends GameState {
 
                     if (game.nextEventIndex >= GameManager.events.size()) {
                         cancel();
+                        game.updateScoreboards();
                     }
                 }
 

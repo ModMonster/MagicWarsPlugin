@@ -251,7 +251,12 @@ public class Game {
         // join in spectator
         if (!(state instanceof WaitingGameState) && !(state instanceof WaitingStartingGameState)) {
             playersInGame.add(player); // add player
-            player.teleport(GameManager.activeGame.world.bukkitWorld.getWorldBorder().getCenter()); // teleport to center
+
+            // get teleport location
+            Location mapCenter = GameManager.activeGame.world.bukkitWorld.getWorldBorder().getCenter();
+            mapCenter.setY(Utilities.getHighestBlockYAtLocation(mapCenter).getY() + 10);
+            player.teleport(mapCenter); // teleport to center
+
             player.getInventory().clear(); // clear inventory
             player.getInventory().setItem(8, GameManager.getLobbyCompass()); // add lobby compass
             player.setGameMode(GameMode.SPECTATOR); // set to spectator
