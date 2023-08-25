@@ -8,7 +8,7 @@ import ca.modmonster.spells.game.gamestate.WaitingGameState;
 import ca.modmonster.spells.util.Icons;
 import ca.modmonster.spells.util.Utilities;
 import net.kyori.adventure.text.TextComponent;
-import org.bukkit.*;
+import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -16,7 +16,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 public class GameManager {
     public static final List<WorldMap> maps = new ArrayList<>();

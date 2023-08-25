@@ -4,16 +4,15 @@ import ca.modmonster.spells.Spells;
 import ca.modmonster.spells.game.Game;
 import ca.modmonster.spells.util.PlaySound;
 import ca.modmonster.spells.util.Utilities;
-import ca.modmonster.spells.util.betterscoreboard.BetterScoreboard;
 import fr.mrmicky.fastboard.adventure.FastBoard;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.text.SimpleDateFormat;
 import java.time.Duration;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class StartingGameState extends GameState {
     @Override

@@ -13,6 +13,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -78,16 +79,11 @@ public class FluffyCloudSpell extends Spell {
     public String getDescription(Power power) {
         return null;
     }
-}
 
-class FluffyCloudOnClick extends Ability {
-    public FluffyCloudOnClick() {
-        super(ClickType.CLICK, ClickBlockType.NONE, ShiftType.NONE);
-    }
-
-    @Override
-    public boolean onUse(PlayerInteractEvent event, Power power) {
-        Player player = event.getPlayer();
+    public static List<Player> floatingPlayers = new ArrayList<>();
+    public static boolean spawnFluffyCloud(Player player) {
+        if (floatingPlayers.contains(player)) return false;
+        floatingPlayers.add(player);
 
         // add slow falling to player
         player.addPotionEffect(PotionEffectType.SLOW_FALLING.createEffect(Integer.MAX_VALUE, 4).withParticles(false).withAmbient(true).withIcon(false));
@@ -108,11 +104,24 @@ class FluffyCloudOnClick extends Ability {
                 if (tickCounter[0] >= 20 && player.isOnGround() || !GameManager.activeGame.isAlive(player)) {
                     player.removePotionEffect(PotionEffectType.SLOW_FALLING);
                     cancel();
+                    floatingPlayers.remove(player);
                 }
             }
         }.runTaskTimer(Spells.main, 1, 1);
 
         return true;
+    }
+}
+
+class FluffyCloudOnClick extends Ability {
+    public FluffyCloudOnClick() {
+        super(ClickType.CLICK, ClickBlockType.NONE, ShiftType.NONE);
+    }
+
+    @Override
+    public boolean onUse(PlayerInteractEvent event, Power power) {
+        Player player = event.getPlayer();
+        return FluffyCloudSpell.spawnFluffyCloud(player);
     }
 
     @Override

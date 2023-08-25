@@ -1,9 +1,9 @@
 package ca.modmonster.spells.item.spell;
 
+import ca.modmonster.spells.item.spell.spells.*;
 import ca.modmonster.spells.item.spell.spells.minion.SkeletonMinion;
 import ca.modmonster.spells.item.spell.spells.minion.WitherSkeletonMinion;
 import ca.modmonster.spells.item.spell.spells.minion.ZombieMinion;
-import ca.modmonster.spells.item.spell.spells.*;
 import ca.modmonster.spells.util.Icons;
 import ca.modmonster.spells.util.Utilities;
 import net.kyori.adventure.text.Component;

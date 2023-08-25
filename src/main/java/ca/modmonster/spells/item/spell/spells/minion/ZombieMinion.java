@@ -1,8 +1,8 @@
 package ca.modmonster.spells.item.spell.spells.minion;
 
 import ca.modmonster.spells.item.Rarity;
-import org.bukkit.*;
-import org.bukkit.entity.*;
+import org.bukkit.Material;
+import org.bukkit.entity.EntityType;
 
 public class ZombieMinion extends Minion {
     @Override

@@ -8,7 +8,7 @@ import ca.modmonster.spells.util.AnimationHelper;
 import ca.modmonster.spells.util.Icons;
 import ca.modmonster.spells.util.PlaySound;
 import ca.modmonster.spells.util.Utilities;
-import ca.modmonster.spells.util.betterscoreboard.animations.MagicGamesScoreboardTitleAnimation;
+import ca.modmonster.spells.util.animations.MagicGamesScoreboardTitleAnimation;
 import fr.mrmicky.fastboard.adventure.FastBoard;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;

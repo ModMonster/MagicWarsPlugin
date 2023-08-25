@@ -5,7 +5,6 @@ import ca.modmonster.spells.game.GameManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.title.Title;
-import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
@@ -33,7 +32,7 @@ public class BorderShrinkGameEvent extends GameEvent {
             player.showTitle(Title.title(
                 Component.empty(),
                 Component.text("The border is shrinking!", NamedTextColor.RED),
-                Title.Times.of(
+                Title.Times.times(
                     Duration.ofMillis(250),
                     Duration.ofMillis(2500),
                     Duration.ofMillis(500)

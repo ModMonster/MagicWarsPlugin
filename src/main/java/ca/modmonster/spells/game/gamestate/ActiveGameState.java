@@ -6,13 +6,10 @@ import ca.modmonster.spells.game.Game;
 import ca.modmonster.spells.game.GameManager;
 import ca.modmonster.spells.game.gameevents.BorderShrinkGameEvent;
 import ca.modmonster.spells.game.gameevents.GameEvent;
-import ca.modmonster.spells.util.Icons;
 import ca.modmonster.spells.util.PlaySound;
 import ca.modmonster.spells.util.Utilities;
-import ca.modmonster.spells.util.betterscoreboard.BetterScoreboard;
 import fr.mrmicky.fastboard.adventure.FastBoard;
 import net.kyori.adventure.text.Component;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -20,9 +17,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 

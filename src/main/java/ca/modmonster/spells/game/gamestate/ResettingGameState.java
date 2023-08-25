@@ -1,7 +1,6 @@
 package ca.modmonster.spells.game.gamestate;
 
 import ca.modmonster.spells.game.Game;
-import ca.modmonster.spells.util.betterscoreboard.BetterScoreboard;
 import fr.mrmicky.fastboard.adventure.FastBoard;
 import org.bukkit.entity.Player;
 

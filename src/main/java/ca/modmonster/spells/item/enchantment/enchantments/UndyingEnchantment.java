@@ -4,17 +4,15 @@ import ca.modmonster.spells.item.Rarity;
 import ca.modmonster.spells.item.enchantment.ArmorEnchantment;
 import ca.modmonster.spells.item.enchantment.EnchantmentManager;
 import ca.modmonster.spells.item.enchantment.EnchantmentType;
-import net.kyori.adventure.text.Component;
-import org.bukkit.*;
+import org.bukkit.EntityEffect;
+import org.bukkit.NamespacedKey;
+import org.bukkit.Sound;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.checkerframework.checker.units.qual.C;
 
 import java.util.Collections;
 

@@ -3,16 +3,13 @@ package ca.modmonster.spells.game;
 import ca.modmonster.spells.Spells;
 import ca.modmonster.spells.util.FileUtil;
 import ca.modmonster.spells.util.Utilities;
-import org.bukkit.*;
-import org.bukkit.block.Chest;
+import org.bukkit.Bukkit;
+import org.bukkit.World;
+import org.bukkit.WorldCreator;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class ActiveWorld {
     public WorldMap map;

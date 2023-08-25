@@ -1,7 +1,9 @@
 package ca.modmonster.spells.events;
 
 import ca.modmonster.spells.Spells;
-import org.bukkit.*;
+import org.bukkit.Color;
+import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

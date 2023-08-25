@@ -5,16 +5,16 @@ import ca.modmonster.spells.item.Rarity;
 import ca.modmonster.spells.item.spell.*;
 import ca.modmonster.spells.item.spell.spells.minion.Minion;
 import ca.modmonster.spells.util.PlaySound;
-import net.kyori.adventure.text.Component;
 import org.bukkit.*;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class Shockwave extends Spell {
     @Override

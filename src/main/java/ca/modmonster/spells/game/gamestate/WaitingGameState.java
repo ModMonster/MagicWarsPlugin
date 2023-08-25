@@ -2,15 +2,9 @@ package ca.modmonster.spells.game.gamestate;
 
 import ca.modmonster.spells.game.Game;
 import ca.modmonster.spells.util.Utilities;
-import ca.modmonster.spells.util.betterscoreboard.BetterScoreboard;
 import fr.mrmicky.fastboard.adventure.FastBoard;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
-
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 public class WaitingGameState extends GameState {
     @Override

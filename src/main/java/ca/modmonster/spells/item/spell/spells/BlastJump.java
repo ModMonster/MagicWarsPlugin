@@ -5,6 +5,7 @@ import ca.modmonster.spells.events.OnEntityDamage;
 import ca.modmonster.spells.item.Rarity;
 import ca.modmonster.spells.item.spell.*;
 import ca.modmonster.spells.util.PlaySound;
+import ca.modmonster.spells.util.Utilities;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.entity.Player;
@@ -87,6 +88,13 @@ class BlastJumpRightClickAbility extends Ability {
     @Override
     public boolean onUse(PlayerInteractEvent event, Power power) {
         Player player = event.getPlayer();
+
+        // prevent using while flying
+        if (player.isGliding()) {
+            PlaySound.error(player);
+            event.getPlayer().sendMessage(Utilities.stringToComponent("&cYou cannot use this spell while &bflying&c."));
+            return false;
+        }
 
         float speed = 2f;
 

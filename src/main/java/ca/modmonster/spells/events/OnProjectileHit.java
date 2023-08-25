@@ -6,8 +6,6 @@ import ca.modmonster.spells.item.spell.SpellManager;
 import ca.modmonster.spells.item.spell.spells.ReturnPearl;
 import ca.modmonster.spells.util.PlaySound;
 import ca.modmonster.spells.util.Utilities;
-import org.bukkit.Bukkit;
-import org.bukkit.EntityEffect;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.*;

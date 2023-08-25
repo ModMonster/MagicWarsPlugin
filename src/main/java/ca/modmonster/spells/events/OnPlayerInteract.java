@@ -4,7 +4,6 @@ import ca.modmonster.spells.Spells;
 import ca.modmonster.spells.game.GameManager;
 import ca.modmonster.spells.item.spell.*;
 import ca.modmonster.spells.util.Utilities;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

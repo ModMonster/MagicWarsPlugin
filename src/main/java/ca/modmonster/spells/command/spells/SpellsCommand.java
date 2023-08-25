@@ -1,7 +1,9 @@
 package ca.modmonster.spells.command.spells;
 
 import ca.modmonster.spells.command.Subcommand;
-import ca.modmonster.spells.command.spells.commands.*;
+import ca.modmonster.spells.command.spells.commands.BrowseCommand;
+import ca.modmonster.spells.command.spells.commands.GiveCommand;
+import ca.modmonster.spells.command.spells.commands.SpawnLootCommand;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

@@ -3,6 +3,8 @@ package ca.modmonster.spells.item.spell.spells;
 import ca.modmonster.spells.events.OnEntityDamage;
 import ca.modmonster.spells.item.Rarity;
 import ca.modmonster.spells.item.spell.*;
+import ca.modmonster.spells.util.PlaySound;
+import ca.modmonster.spells.util.Utilities;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -85,6 +87,13 @@ class PixieDustRightClickAbility extends Ability {
     @Override
     public boolean onUse(PlayerInteractEvent event, Power power) {
         Player player = event.getPlayer();
+
+        // prevent using while flying
+        if (player.isGliding()) {
+            PlaySound.error(player);
+            event.getPlayer().sendMessage(Utilities.stringToComponent("&cYou cannot use this spell while &bflying&c."));
+            return false;
+        }
 
         // play sound
         player.playSound(player.getLocation(), Sound.ENTITY_SHULKER_SHOOT, 1, 1);

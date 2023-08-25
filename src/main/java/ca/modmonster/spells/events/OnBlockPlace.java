@@ -1,7 +1,6 @@
 package ca.modmonster.spells.events;
 
 import ca.modmonster.spells.game.GameManager;
-import ca.modmonster.spells.util.Utilities;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
