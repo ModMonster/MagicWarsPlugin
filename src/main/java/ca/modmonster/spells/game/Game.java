@@ -246,8 +246,35 @@ public class Game {
 
     public String join(Player player) {
         if (state == null) return "Still loading game, try again in a few seconds!";
-        if (!(state instanceof WaitingGameState) && !(state instanceof WaitingStartingGameState)) return "Game is currently in an unjoinable state (" + state.getClass().getSimpleName() + ")!";
         if (playersInGame.size() >= world.map.maxPlayerCount) return "All player slots in this game are taken!";
+
+        // join in spectator
+        if (!(state instanceof WaitingGameState) && !(state instanceof WaitingStartingGameState)) {
+            playersInGame.add(player); // add player
+            player.teleport(GameManager.activeGame.world.bukkitWorld.getWorldBorder().getCenter()); // teleport to center
+            player.getInventory().clear(); // clear inventory
+            player.getInventory().setItem(8, GameManager.getLobbyCompass()); // add lobby compass
+            player.setGameMode(GameMode.SPECTATOR); // set to spectator
+
+            // setup scoreboard
+            FastBoard board = new FastBoard(player);
+            boards.put(player, board);
+
+            updateScoreboards(); // update other scoreboards
+            Spells.db.setServerInDatabase(); // update server in database
+
+            // show return to lobby action bar
+            BukkitRunnable actionBar = new BukkitRunnable() {
+                @Override
+                public void run() {
+                    player.sendActionBar(Utilities.stringToComponent("&bOpen your inventory &3and &bclick the compass &3to return to the lobby."));
+                }
+            };
+            actionBar.runTaskTimer(Spells.main, 0, 20);
+            runningPlayerEvents.put(actionBar, player);
+
+            return null;
+        }
 
         // reset player stats
         player.setHealth(Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_MAX_HEALTH)).getValue());
