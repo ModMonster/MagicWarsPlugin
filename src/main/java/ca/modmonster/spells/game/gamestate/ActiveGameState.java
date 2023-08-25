@@ -77,6 +77,10 @@ public class ActiveGameState extends GameState {
                 if (nextEvent.timeToRun == game.time) {
                     nextEvent.runEvent(game);
                     game.nextEventIndex += 1;
+
+                    if (game.nextEventIndex >= GameManager.events.size()) {
+                        cancel();
+                    }
                 }
 
                 // storm warning
