@@ -3,8 +3,6 @@ package ca.modmonster.spells;
 import ca.modmonster.spells.command.enchantments.EnchantmentsCommand;
 import ca.modmonster.spells.command.magicwars.MagicWarsCommand;
 import ca.modmonster.spells.command.spells.SpellsCommand;
-import ca.modmonster.spells.database.DatabaseManager;
-import ca.modmonster.spells.database.models.ServerModel;
 import ca.modmonster.spells.events.*;
 import ca.modmonster.spells.game.GameManager;
 import ca.modmonster.spells.game.LootChest;
@@ -16,7 +14,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.SQLException;
 
 // TODO: make system to record who killed who when killed with spells.
 // TODO: prevent players from sleeping in beds
@@ -46,20 +43,10 @@ public final class Spells extends JavaPlugin {
     public static YamlConfiguration mapConfig;
     public static YamlConfiguration mainConfig;
     public static Spells main;
-    public static DatabaseManager db;
 
     @Override
     public void onEnable() {
         main = this;
-        db = new DatabaseManager();
-
-        try {
-            db.initDatabase();
-            getLogger().info("Successfully connected to the database!");
-        } catch (SQLException e) {
-            getLogger().severe("You borked the database!!!");
-            e.printStackTrace();
-        }
 
         generateConfig();
 
@@ -169,16 +156,6 @@ public final class Spells extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        // set server as offline in database
-        ServerModel server = db.getServerModel();
-        server.setState("OFFLINE");
-
-        try {
-            db.updateServerTable(server);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
         GameManager.activeGame.world.unload();
         super.onDisable();
     }

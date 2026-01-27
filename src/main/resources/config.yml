@@ -1,14 +1,6 @@
-# server id number
-id: 1
-
-# lobby server name
-lobby-server: "lobby"
-
-# mysql database info
-db-url: "localhost"
-db-user: "root"
-db-password: ""
-db-database: "monster_network"
+# Lobby server name, or null if not in a BungeeCord / Velocity network
+# If set to null, players will be kicked when the game is over / when they try to leave
+lobby-server: null
 
 # ===================================================
 # Events that take place during the game

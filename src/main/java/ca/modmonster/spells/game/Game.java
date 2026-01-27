@@ -107,9 +107,6 @@ public class Game {
         newState.setState(this);
         state = newState;
         updateScoreboards();
-
-        // update database
-        Spells.db.setServerInDatabase();
     }
 
     public void updateScoreboards() {
@@ -239,9 +236,6 @@ public class Game {
         } else if (alivePlayers.size() == 2) {
             thirdPlace = victim;
         }
-
-        // update database
-        Spells.db.setServerInDatabase();
     }
 
     public String join(Player player) {
@@ -267,7 +261,6 @@ public class Game {
             boards.put(player, board);
 
             updateScoreboards(); // update other scoreboards
-            Spells.db.setServerInDatabase(); // update server in database
 
             // show return to lobby action bar
             BukkitRunnable actionBar = new BukkitRunnable() {
@@ -348,9 +341,6 @@ public class Game {
         // set player count on scoreboard
         updateScoreboards();
 
-        // update database
-        Spells.db.setServerInDatabase();
-
         return null;
     }
 
@@ -426,9 +416,6 @@ public class Game {
 
         // set player count on scoreboard
         updateScoreboards();
-
-        // update database
-        Spells.db.setServerInDatabase();
     }
 
     TextComponent getLeaveMessage(Player player) {

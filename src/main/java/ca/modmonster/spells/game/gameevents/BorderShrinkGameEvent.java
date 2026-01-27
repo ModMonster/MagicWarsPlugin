@@ -43,6 +43,6 @@ public class BorderShrinkGameEvent extends GameEvent {
         }
 
         // shrink world border
-        GameManager.activeGame.world.bukkitWorld.getWorldBorder().changeSize(shrinkSize, shrinkTime);
+        GameManager.activeGame.world.bukkitWorld.getWorldBorder().changeSize(shrinkSize, shrinkTime * 20L);
     }
 }

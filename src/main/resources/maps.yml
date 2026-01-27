@@ -5,7 +5,7 @@ block-break-whitelist: # list of blocks to allow breaking
   - ACACIA_LEAVES
   - DARK_OAK_LEAVES
   - JUNGLE_LEAVES
-  - GRASS
+  - SHORT_GRASS
   - TALL_GRASS
   - DANDELION
   - POPPY

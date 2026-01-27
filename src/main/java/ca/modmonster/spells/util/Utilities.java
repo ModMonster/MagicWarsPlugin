@@ -588,6 +588,11 @@ public class Utilities {
     }
 
     public static void bungeeServerSend(Player player, String server) {
+        if (server == null) {
+            player.kick(Component.text("Unable to transfer you to a lobby server", NamedTextColor.RED));
+            return;
+        }
+
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF("Connect");
         out.writeUTF(server);
