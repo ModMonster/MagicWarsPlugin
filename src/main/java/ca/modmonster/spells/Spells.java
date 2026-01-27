@@ -176,7 +176,7 @@ public final class Spells extends JavaPlugin {
         server.setState("OFFLINE");
 
         try {
-            db.updateDatabase(server);
+            db.updateServerTable(server);
         } catch (SQLException e) {
             e.printStackTrace();
         }

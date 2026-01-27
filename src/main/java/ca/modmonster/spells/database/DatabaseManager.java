@@ -2,9 +2,13 @@ package ca.modmonster.spells.database;
 
 import ca.modmonster.spells.Spells;
 import ca.modmonster.spells.database.models.ServerModel;
+import ca.modmonster.spells.database.models.PlayerStatsModel;
 import ca.modmonster.spells.game.GameManager;
+import org.bukkit.entity.Player;
 
 import java.sql.*;
+import java.time.Duration;
+import java.util.UUID;
 
 public class DatabaseManager {
     private Connection connection;
@@ -24,8 +28,12 @@ public class DatabaseManager {
     }
 
     public void initDatabase() throws SQLException {
+        runStatement("CREATE TABLE IF NOT EXISTS magic_wars(id int primary key, state varchar(16), map varchar(36), players int, max_players int, alive int, time_remaining int)");
+        runStatement("CREATE TABLE IF NOT EXISTS stats.magic_wars(player varchar(36) primary key, kills int, wins int, deaths int, time_played bigint)");
+    }
+
+    public void runStatement(String sql) throws SQLException {
         Statement statement = getConnection().createStatement();
-        String sql = "CREATE TABLE IF NOT EXISTS magic_wars(id int primary key, state varchar(16), map varchar(36), players int, max_players int, alive int, time_remaining int)";
         statement.execute(sql);
         statement.close();
     }
@@ -42,22 +50,72 @@ public class DatabaseManager {
         );
     }
 
+    public void initializePlayerStats(PlayerStatsModel model) throws SQLException {
+        PreparedStatement statement = getConnection()
+            .prepareStatement("INSERT INTO stats.magic_wars(player, kills, wins, deaths, time_played) VALUES(?, ?, ?, ?, ?)");
+
+        statement.setString(1, model.getPlayer().toString());
+        statement.setInt(2, model.getKills());
+        statement.setInt(3, model.getWins());
+        statement.setInt(4, model.getDeaths());
+        statement.setLong(5, model.getTimePlayed().getSeconds());
+
+        statement.executeUpdate();
+        statement.close();
+    }
+
+    public PlayerStatsModel getPlayerStats(Player player) throws SQLException {
+        Statement statement = getConnection().createStatement();
+        String sql = "SELECT * FROM stats.magic_wars WHERE player = " + player.getUniqueId();
+        ResultSet results = statement.executeQuery(sql);
+
+        if (results.next()) {
+            PlayerStatsModel stats = new PlayerStatsModel(
+                UUID.fromString(results.getString("player")),
+                results.getInt("kills"),
+                results.getInt("wins"),
+                results.getInt("deaths"),
+                Duration.ofSeconds(results.getInt("time_played"))
+            );
+
+            statement.close();
+            return stats;
+        }
+
+        statement.close();
+        return null;
+    }
+
+    public void updatePlayerStats(PlayerStatsModel model) throws SQLException {
+        PreparedStatement statement = getConnection()
+            .prepareStatement("UPDATE stats.magic_wars SET kills = ?, wins = ?, deaths = ?, time_played = ? WHERE player = ?");
+
+        statement.setInt(1, model.getKills());
+        statement.setInt(2, model.getWins());
+        statement.setInt(3, model.getDeaths());
+        statement.setLong(4, model.getTimePlayed().getSeconds());
+        statement.setString(5, model.getPlayer().toString());
+
+        statement.executeUpdate();
+        statement.close();
+    }
+
     public void setServerInDatabase() {
         try {
             ServerModel server = getServerInfoByID(Spells.main.getConfig().getInt("id"));
 
             if (server == null) {
                 // new server that needs to be registered to the database
-                sendModelToDatabase(getServerModel());
+                sendServerModelToDatabase(getServerModel());
             } else {
-                updateDatabase(getServerModel());
+                updateServerTable(getServerModel());
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public void updateDatabase(ServerModel server) throws SQLException {
+    public void updateServerTable(ServerModel server) throws SQLException {
         PreparedStatement statement = getConnection()
             .prepareStatement("UPDATE magic_wars SET state = ?, map = ?, players = ?, max_players = ?, alive = ?, time_remaining = ? WHERE id = ?");
 
@@ -73,7 +131,7 @@ public class DatabaseManager {
         statement.close();
     }
 
-    private void sendModelToDatabase(ServerModel server) throws SQLException {
+    private void sendServerModelToDatabase(ServerModel server) throws SQLException {
         PreparedStatement statement = getConnection()
             .prepareStatement("INSERT INTO magic_wars(id, state, map, players, max_players, alive, time_remaining) VALUES(?, ?, ?, ?, ?, ?, ?)");
 
