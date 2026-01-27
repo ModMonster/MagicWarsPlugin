@@ -8,7 +8,6 @@ import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -209,6 +208,10 @@ public class EnchantmentManager {
         Utilities.setPersistentItemTag(itemStack, "enchantments", enchantIds);
         Utilities.setPersistentItemTag(itemStack, "enchantment_levels", enchantLevels);
 
+        // make item glow!
+        if (!itemStack.getType().equals(Material.ENCHANTED_BOOK))
+            Utilities.setGlowing(itemStack, enchantIds.length > 0);
+
         updateEnchantedItemLore(itemStack);
     }
 
@@ -216,11 +219,11 @@ public class EnchantmentManager {
         // make itemstack with spell material
         ItemStack itemStack = new ItemStack(Material.ENCHANTED_BOOK);
 
-        // get item metadata
-        EnchantmentStorageMeta meta = (EnchantmentStorageMeta) itemStack.getItemMeta();
-
         // set enchantment
         addEnchant(itemStack, enchantment, level);
+
+        // get item metadata
+        ItemMeta meta = itemStack.getItemMeta();
 
         // set name
         if (enchantment.hasLevel()) {

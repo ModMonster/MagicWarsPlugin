@@ -36,8 +36,8 @@ import java.io.IOException;
 // TODO: dont show dead players in world when spectating
 
 // TO TEST
-// falling blocks (webslinger)
 // enchantments
+// TODO: hide firework flight duration
 
 public final class Spells extends JavaPlugin {
     public static YamlConfiguration mapConfig;
