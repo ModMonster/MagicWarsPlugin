@@ -87,21 +87,14 @@ class StaffOfTeleportationRightClickAbility extends Ability {
     public boolean onUse(PlayerInteractEvent event, Power power) {
         Player player = event.getPlayer();
 
-        Integer blocksToTeleport = 0;
-
-        switch (power) {
-            case WEAK:
-                blocksToTeleport = 5;
-                break;
-            case STRONG:
-                blocksToTeleport = 7;
-                break;
-            case POWERFUL:
-                blocksToTeleport = 9;
-        }
+        int blocksToTeleport = switch (power) {
+            case WEAK -> 5;
+            case STRONG -> 7;
+            case POWERFUL -> 9;
+        };
 
         Location teleportLocation;
-        Integer i = 0;
+        int i = 0;
 
         while (true) {
             teleportLocation = player.getLocation();
@@ -135,33 +128,21 @@ class StaffOfTeleportationRightClickAbility extends Ability {
 
     @Override
     public String getDescription(Power power) {
-        int blocksToTeleport = 0;
-
-        switch (power) {
-            case WEAK:
-                blocksToTeleport = 5;
-                break;
-            case STRONG:
-                blocksToTeleport = 7;
-                break;
-            case POWERFUL:
-                blocksToTeleport = 9;
-        }
+        int blocksToTeleport = switch (power) {
+            case WEAK -> 5;
+            case STRONG -> 7;
+            case POWERFUL -> 9;
+        };
 
         return "Teleport " + blocksToTeleport + " blocks in the direction you look. Can be used to phase through walls.";
     }
 
     @Override
     public Integer getCooldown(Power power) {
-        switch (power) {
-            case WEAK:
-                return 40;
-            case STRONG:
-                return 30;
-            case POWERFUL:
-                return 20;
-            default:
-                return null;
-        }
+        return switch (power) {
+            case WEAK -> 40;
+            case STRONG -> 30;
+            case POWERFUL -> 20;
+        };
     }
 }

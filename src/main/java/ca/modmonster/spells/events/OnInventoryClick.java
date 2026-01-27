@@ -13,7 +13,6 @@ import ca.modmonster.spells.util.PlaySound;
 import ca.modmonster.spells.util.Utilities;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -24,6 +23,7 @@ import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.List;
+import java.util.Map;
 
 public class OnInventoryClick implements Listener {
     @EventHandler
@@ -40,46 +40,45 @@ public class OnInventoryClick implements Listener {
     }
 
     void handleEnchanting(InventoryClickEvent event) {
-        if (!(event.getWhoClicked() instanceof Player)) return;
-        Player player = (Player) event.getWhoClicked();
+        if (!(event.getWhoClicked() instanceof Player player)) return;
 
-        ItemStack itemOnCursor = player.getItemOnCursor();
-        if (!(itemOnCursor.getItemMeta() instanceof EnchantmentStorageMeta)) return;
+        ItemStack book = player.getItemOnCursor();
+        if (!(book.getItemMeta() instanceof EnchantmentStorageMeta)) return;
 
-        ItemStack clickedItem = event.getCurrentItem();
-        if (clickedItem == null || clickedItem.getType().equals(Material.AIR)) return;
-        if (SpellManager.isSpell(clickedItem)) return;
-        if (clickedItem.getItemMeta().equals(Game.blockerStack.getItemMeta())) return;
-        if (clickedItem.getItemMeta().equals(Game.trashStack.getItemMeta())) {
+        ItemStack item = event.getCurrentItem();
+        if (item == null || item.getType().equals(Material.AIR)) return;
+        if (SpellManager.isSpell(item)) return;
+        if (item.getItemMeta().equals(Game.blockerStack.getItemMeta())) return;
+        if (item.getItemMeta().equals(Game.trashStack.getItemMeta())) {
             return;
         }
 
         event.setCancelled(true);
 
-        EnchantmentStorageMeta bookMeta = (EnchantmentStorageMeta) itemOnCursor.getItemMeta();
-        Enchantment bookEnchantment = bookMeta.getStoredEnchants().keySet().stream().findFirst().get();
-        CustomEnchantment bookCustomEnchantment = EnchantmentManager.getEnchantmentFromBukkit(bookEnchantment);
+        // get the enchantment on the book
+        Map<CustomEnchantment, Integer> bookEnchants = EnchantmentManager.getEnchantmentsFromItem(book);
+        Map.Entry<CustomEnchantment, Integer> newEnchant = bookEnchants.entrySet().iterator().next();
 
-        assert bookCustomEnchantment != null;
-        List<Material> applicableMaterials = bookCustomEnchantment.type.getEnchantableMaterials();
+        List<Material> applicableMaterials = newEnchant.getKey().getType().getEnchantableMaterials();
 
         // item in item slot isn't applicable to enchantment
-        if (!applicableMaterials.contains(clickedItem.getType())) {
+        if (!applicableMaterials.contains(item.getType())) {
             PlaySound.error(player);
             return;
         }
 
+        // get item's current enchantments
+        Map<CustomEnchantment, Integer> itemEnchants = EnchantmentManager.getEnchantmentsFromItem(item);
+
         // enchantment conflicts with existing enchantment
-        for (Enchantment enchantment : clickedItem.getEnchantments().keySet()) {
-            CustomEnchantment customEnchantment = EnchantmentManager.getEnchantmentFromBukkit(enchantment);
-            if (customEnchantment == null) continue;
-            if (customEnchantment.conflictsWith(bookCustomEnchantment)) {
+        for (Map.Entry<CustomEnchantment, Integer> entry : itemEnchants.entrySet()) {
+            if (entry.getKey().conflictsWith(newEnchant.getKey())) {
                 PlaySound.error(player);
                 return;
             }
         }
 
-        EnchantmentManager.enchantItem(clickedItem, bookMeta.getStoredEnchants()); // set enchantments on item
+        EnchantmentManager.addEnchant(item, newEnchant.getKey(), newEnchant.getValue());
         player.setItemOnCursor(null); // delete book
     }
 
@@ -98,7 +97,7 @@ public class OnInventoryClick implements Listener {
         ItemStack item = event.getCurrentItem();
         if (item == null) return;
         if (item.lore() == null) return;
-        if (!item.lore().contains(LootChest.armorEquipLore)) return;
+        if (!item.lore().contains(LootChest.ARMOR_EQUIP_LORE)) return;
 
         if (Utilities.isMaterialArmor(item.getType())) item.lore(null);
     }

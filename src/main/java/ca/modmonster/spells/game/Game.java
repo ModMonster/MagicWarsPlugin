@@ -30,7 +30,7 @@ import java.util.*;
 
 public class Game {
     public GameState state = null;
-    public ActiveWorld world;
+    public final ActiveWorld world;
     public final List<Player> playersInGame = new ArrayList<>();
     public final Map<Player, Location> filledCages = new HashMap<>();
 
@@ -235,7 +235,7 @@ public class Game {
         // make player win / 2nd / 3rd
         if (alivePlayers.size() == 1) {
             secondPlace = victim;
-            win(alivePlayers.get(0));
+            win(alivePlayers.getFirst());
         } else if (alivePlayers.size() == 2) {
             thirdPlace = victim;
         }
@@ -254,7 +254,8 @@ public class Game {
 
             // get teleport location
             Location mapCenter = GameManager.activeGame.world.bukkitWorld.getWorldBorder().getCenter();
-            mapCenter.setY(Utilities.getHighestBlockYAtLocation(mapCenter).getY() + 10);
+            Location highest = Utilities.getHighestBlockYAtLocation(mapCenter);
+            mapCenter.setY(highest == null? 180 : (highest.getY() + 10));
             player.teleport(mapCenter); // teleport to center
 
             player.getInventory().clear(); // clear inventory
@@ -282,7 +283,7 @@ public class Game {
         }
 
         // reset player stats
-        player.setHealth(Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_MAX_HEALTH)).getValue());
+        player.setHealth(Objects.requireNonNull(player.getAttribute(Attribute.MAX_HEALTH)).getValue());
         player.setFireTicks(0);
         player.clearActivePotionEffects();
 
@@ -404,7 +405,7 @@ public class Game {
             if (firstPlace == null) {
                 if (playersInGame.size() == 1) {
                     secondPlace = player;
-                    win(alivePlayers.get(0));
+                    win(alivePlayers.getFirst());
                 } else if (playersInGame.size() == 2) {
                     thirdPlace = player;
                 }
@@ -482,7 +483,7 @@ public class Game {
             @Override
             public void run() {
                 Location spawnLocation = player.getLocation().clone().add(new Random().nextDouble() * 4 - 2, new Random().nextDouble() * 4 - 2, new Random().nextDouble() * 4 - 2);
-                Firework firework = (Firework) player.getWorld().spawnEntity(spawnLocation, EntityType.FIREWORK);
+                Firework firework = (Firework) player.getWorld().spawnEntity(spawnLocation, EntityType.FIREWORK_ROCKET);
 
                 FireworkMeta meta = firework.getFireworkMeta();
 
@@ -511,23 +512,16 @@ public class Game {
     }
 
     private static Color getColor(final int i) {
-        switch (i) {
-            case 1:
-                return Color.RED;
-            case 2:
-                return Color.ORANGE;
-            case 3:
-                return Color.YELLOW;
-            case 4:
-                return Color.GREEN;
-            case 5:
-                return Color.AQUA;
-            case 6:
-                return Color.BLUE;
-            case 7:
-                return Color.PURPLE;
-        }
-        return Color.WHITE;
+        return switch (i) {
+            case 1 -> Color.RED;
+            case 2 -> Color.ORANGE;
+            case 3 -> Color.YELLOW;
+            case 4 -> Color.GREEN;
+            case 5 -> Color.AQUA;
+            case 6 -> Color.BLUE;
+            case 7 -> Color.PURPLE;
+            default -> Color.WHITE;
+        };
     }
 
     public boolean isAlive(Player player) {

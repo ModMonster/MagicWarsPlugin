@@ -6,7 +6,6 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
@@ -14,9 +13,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.lang.reflect.Field;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class EnchantmentManager {
     public static final List<CustomEnchantment> enchantments = Arrays.asList(
@@ -37,96 +34,96 @@ public class EnchantmentManager {
         new LeechingEnchantment()
     );
 
-    public static void init() {
-        for (CustomEnchantment enchantment : enchantments) {
-            boolean registered = Arrays.stream(Enchantment.values()).collect(Collectors.toList()).contains(enchantment.bukkitEnchantment);
-
-            if (!registered) {
-                registerEnchant(enchantment);
-            }
-        }
-    }
-
-    public static void registerEnchant(CustomEnchantment enchantment) {
-        try {
-            Field f = Enchantment.class.getDeclaredField("acceptingNew");
-            f.setAccessible(true);
-            f.set(null, true);
-            Enchantment.registerEnchantment(enchantment.bukkitEnchantment);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static CustomEnchantment getEnchantmentFromBukkit(Enchantment enchantment) {
-        for (CustomEnchantment customEnchantment : enchantments) {
-            if (customEnchantment.bukkitEnchantment.equals(enchantment)) {
-                return customEnchantment;
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Gets all enchantments on a book, represented as custom enchantments.
-     * If the provided ItemStack is not an enchanted book, returns null.
-     * @param book itemstack representing the enchanted book
-     * @return all stored enchantments on the book as custom enchantments
-     */
-    public static Map<CustomEnchantment, Integer> getEnchantmentsFromBook(ItemStack book) {
-        if (!(book.getItemMeta() instanceof EnchantmentStorageMeta)) return null;
-
-        Map<Enchantment, Integer> bookEnchants = ((EnchantmentStorageMeta) book.getItemMeta()).getStoredEnchants();
-        Map<CustomEnchantment, Integer> customBookEnchants = new HashMap<>();
-
-        for (Map.Entry<Enchantment, Integer> entry : bookEnchants.entrySet()) {
-            customBookEnchants.put(getEnchantmentFromBukkit(entry.getKey()), entry.getValue());
-        }
-
-        return customBookEnchants;
-    }
-
     /**
      * Gets all enchantments on an item, represented as custom enchantments.
      * @param item itemstack to get enchantments from
      * @return all enchantments on the item as custom enchantments
      */
     public static Map<CustomEnchantment, Integer> getEnchantmentsFromItem(ItemStack item) {
-        Map<Enchantment, Integer> itemEnchants = item.getEnchantments();
-        Map<CustomEnchantment, Integer> customItemEnchants = new HashMap<>();
+        int[] enchants = Utilities.getPersistentItemTagIntArray(item, "enchantments");
+        int[] enchantLevels = Utilities.getPersistentItemTagIntArray(item, "enchantment_levels");
+        Map<CustomEnchantment, Integer> enchantMap = new HashMap<>();
+        if (enchants == null || enchantLevels == null) return enchantMap;
 
-        for (Map.Entry<Enchantment, Integer> entry : itemEnchants.entrySet()) {
-            customItemEnchants.put(getEnchantmentFromBukkit(entry.getKey()), entry.getValue());
+        for (int i = 0; i < enchants.length; i++) {
+            CustomEnchantment enchant = enchantments.get(enchants[i]);
+            enchantMap.put(enchant, enchantLevels[i]);
         }
 
-        return customItemEnchants;
+        return enchantMap;
+    }
+
+    /**
+     * @param item item to check
+     * @param enchantment enchantment to check
+     * @return whether the enchantment exists on this item
+     */
+    public static boolean hasEnchant(ItemStack item, CustomEnchantment enchantment) {
+        return getEnchantmentsFromItem(item).containsKey(enchantment);
+    }
+
+    /**
+     * @param item item to check
+     * @param enchantmentId ID of the enchantment to check
+     * @return whether the enchantment exists on this item
+     */
+    public static boolean hasEnchant(ItemStack item, String enchantmentId) {
+        CustomEnchantment enchantment = customEnchantmentFromId(enchantmentId);
+        if (enchantment == null) return false;
+        return hasEnchant(item, enchantment);
+    }
+
+    /**
+     * @param id ID of enchantment to get
+     * @return CustomEnchantment represented by provided ID
+     */
+    public static CustomEnchantment customEnchantmentFromId(String id) {
+        // get CustomEnchantment from ID
+        CustomEnchantment enchantment = null;
+        for (CustomEnchantment e : EnchantmentManager.enchantments) {
+            if (id.equals(e.getId())) {
+                enchantment = e;
+                break;
+            }
+        }
+        return enchantment;
+    }
+
+    /**
+     * @param item item to check
+     * @param enchantment enchantment to check
+     * @return the level of the enchantment on this item or 0 if the enchantment does not exist
+     */
+    public static int getEnchantLevel(ItemStack item, CustomEnchantment enchantment) {
+        return getEnchantmentsFromItem(item).getOrDefault(enchantment, 0);
     }
 
     /**
      * @param player player to check on
-     * @param enchantment enchantment to check for
+     * @param enchantmentId ID of the enchantment to check for
      * @return whether the player has the given enchantment on any of their armor pieces
      */
-    public static boolean playerHasArmorEnchantment(Player player, Enchantment enchantment) {
+    public static boolean playerHasArmorEnchantment(Player player, String enchantmentId) {
         ItemStack[] armor = player.getEquipment().getArmorContents();
 
         for (ItemStack armorPiece : armor) {
             if (armorPiece == null || armorPiece.getType().equals(Material.AIR)) continue;
-            if (armorPiece.getItemMeta().hasEnchant(enchantment)) return true;
+            if (hasEnchant(armorPiece, enchantmentId)) return true;
         }
 
         return false;
     }
 
-    public static @Nullable Integer getPlayerArmorEnchantmentLevel(Player player, Enchantment enchantment) {
+    public static @Nullable Integer getPlayerArmorEnchantmentLevel(Player player, String enchantmentId) {
         ItemStack[] armor = player.getEquipment().getArmorContents();
 
         int bestLevel = 0;
         for (ItemStack armorPiece : armor) {
             if (armorPiece == null || armorPiece.getType().equals(Material.AIR)) continue;
-            if (armorPiece.getItemMeta().hasEnchant(enchantment)) {
-                int newLevel = armorPiece.getItemMeta().getEnchantLevel(enchantment);
+
+            CustomEnchantment enchantment = customEnchantmentFromId(enchantmentId);
+            if (hasEnchant(armorPiece, enchantment)) {
+                int newLevel = getEnchantLevel(armorPiece, enchantment);
 
                 if (newLevel > bestLevel) {
                     bestLevel = newLevel;
@@ -150,21 +147,68 @@ public class EnchantmentManager {
         List<Component> lore = new ArrayList<>();
 
         // loop through all enchantments on item and add to lore
-        for (Map.Entry<Enchantment, Integer> entry : itemStack.getEnchantments().entrySet()) {
-            lore.add(entry.getKey().displayName(entry.getValue()).decoration(TextDecoration.ITALIC, false));
+        for (Map.Entry<CustomEnchantment, Integer> entry : EnchantmentManager.getEnchantmentsFromItem(itemStack).entrySet()) {
+            lore.add(entry.getKey().getDisplayName(entry.getValue()).decoration(TextDecoration.ITALIC, false));
         }
 
         meta.lore(lore); // set item lore
         itemStack.setItemMeta(meta); // set item metadata
     }
 
-    public static void enchantItem(ItemStack itemStack, Enchantment enchantment, Integer level) {
-        itemStack.addUnsafeEnchantment(enchantment, level); // set enchantments on item
-        updateEnchantedItemLore(itemStack);
+    public static void addEnchant(ItemStack itemStack, CustomEnchantment enchantment, Integer level) {
+        Map<CustomEnchantment, Integer> map = new HashMap<>();
+        map.put(enchantment, level);
+
+        addEnchant(itemStack, map);
     }
 
-    public static void enchantItem(ItemStack itemStack, Map<Enchantment, Integer> enchantments) {
-        itemStack.addUnsafeEnchantments(enchantments); // set enchantments on item
+    public static void addEnchant(ItemStack itemStack, Map<CustomEnchantment, Integer> enchantments) {
+        // get enchantments currently on item
+        Map<CustomEnchantment, Integer> currentEnchants = getEnchantmentsFromItem(itemStack);
+        currentEnchants.putAll(enchantments); // add new enchantments
+
+        setEnchants(itemStack, currentEnchants);
+    }
+
+    public static void removeEnchant(ItemStack itemStack, String enchantmentId) {
+        // get CustomEnchantment from ID
+        CustomEnchantment enchantment = customEnchantmentFromId(enchantmentId);
+        if (enchantment == null) return;
+
+        // get enchantments currently on item
+        Map<CustomEnchantment, Integer> currentEnchants = getEnchantmentsFromItem(itemStack);
+        currentEnchants.remove(enchantment);
+
+        setEnchants(itemStack, currentEnchants);
+    }
+
+    public static void setEnchants(ItemStack itemStack, Map<CustomEnchantment, Integer> enchantments) {
+        // build arrays of enchantment IDs and levels
+        int[] enchantIds = new int[enchantments.size()];
+        int[] enchantLevels = new int[enchantments.size()];
+
+        int i = 0;
+        for (Map.Entry<CustomEnchantment, Integer> entry : enchantments.entrySet()) {
+            // get the position of desired enchantment in array; this becomes its ID
+            int id = -1;
+            for (int j = 0; j < EnchantmentManager.enchantments.size(); j++) {
+                if (entry.getKey() == EnchantmentManager.enchantments.get(j)) {
+                    id = j;
+                    break;
+                }
+            }
+            if (id == -1) continue; // this should not be possible
+
+            enchantIds[i] = id;
+            enchantLevels[i] = entry.getValue();
+
+            i++;
+        }
+
+        // set enchantments on item
+        Utilities.setPersistentItemTag(itemStack, "enchantments", enchantIds);
+        Utilities.setPersistentItemTag(itemStack, "enchantment_levels", enchantLevels);
+
         updateEnchantedItemLore(itemStack);
     }
 
@@ -176,20 +220,20 @@ public class EnchantmentManager {
         EnchantmentStorageMeta meta = (EnchantmentStorageMeta) itemStack.getItemMeta();
 
         // set enchantment
-        meta.addStoredEnchant(enchantment.bukkitEnchantment, level, true);
+        addEnchant(itemStack, enchantment, level);
 
         // set name
         if (enchantment.hasLevel()) {
             meta.displayName(
-                Component.text("Enchanted Book", enchantment.rarity.color).decoration(TextDecoration.ITALIC, false)
+                Component.text("Enchanted Book", enchantment.getRarity().color).decoration(TextDecoration.ITALIC, false)
                     .append(Component.text(" - ", NamedTextColor.DARK_GRAY))
-                    .append(Component.text(enchantment.name + " " + Utilities.integerToRoman(level), enchantment.rarity.color))
+                    .append(Component.text(enchantment.getName() + " " + Utilities.integerToRoman(level), enchantment.getRarity().color))
             );
         } else {
             meta.displayName(
-                Component.text("Enchanted Book", enchantment.rarity.color).decoration(TextDecoration.ITALIC, false)
+                Component.text("Enchanted Book", enchantment.getRarity().color).decoration(TextDecoration.ITALIC, false)
                     .append(Component.text(" - ", NamedTextColor.DARK_GRAY))
-                    .append(Component.text(enchantment.name, enchantment.rarity.color))
+                    .append(Component.text(enchantment.getName(), enchantment.getRarity().color))
             );
         }
 
@@ -197,7 +241,7 @@ public class EnchantmentManager {
         List<Component> lore = new ArrayList<>();
 
         // show item enchantment is used on
-        lore.add(Utilities.stringToComponentWithoutItalic("&8Apply to: " + enchantment.type.name));
+        lore.add(Utilities.stringToComponentWithoutItalic("&8Apply to: " + enchantment.getType().name));
 
         lore.add(Component.space());
 
@@ -211,7 +255,7 @@ public class EnchantmentManager {
         lore.add(Component.space());
 
         // add rarity lore
-        lore.add(enchantment.rarity.getDecoratedComponent().append(Component.text(" ENCHANTMENT")));
+        lore.add(enchantment.getRarity().getDecoratedComponent().append(Component.text(" ENCHANTMENT")));
 
         meta.lore(lore);
 

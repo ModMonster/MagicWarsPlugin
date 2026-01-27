@@ -6,18 +6,30 @@ import ca.modmonster.spells.item.enchantment.EnchantmentType;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffectType;
 
-import java.util.ArrayList;
-
 public class BerserkEnchantment extends ArmorEnchantment {
-    public BerserkEnchantment() {
-        super(
-            "berserk",
-            "Berserk",
-            Rarity.MYTHIC,
-            EnchantmentType.ARMOR,
-            2,
-            new ArrayList<>()
-        );
+    @Override
+    public String getId() {
+        return "berserk";
+    }
+
+    @Override
+    public String getName() {
+        return "Berserk";
+    }
+
+    @Override
+    public Rarity getRarity() {
+        return Rarity.MYTHIC;
+    }
+
+    @Override
+    public EnchantmentType getType() {
+        return EnchantmentType.ARMOR;
+    }
+
+    @Override
+    public int getMaxLevel() {
+        return 2;
     }
 
     @Override
@@ -29,17 +41,17 @@ public class BerserkEnchantment extends ArmorEnchantment {
     public void onTick(Player player, Integer level) {
         int maximumHealthToTrigger = level >= 2? 8 : 6;
 
-        if (!player.hasPotionEffect(PotionEffectType.INCREASE_DAMAGE) && player.getHealth() <= maximumHealthToTrigger) {
-            player.addPotionEffect(PotionEffectType.INCREASE_DAMAGE.createEffect(Integer.MAX_VALUE, 1).withParticles(false).withAmbient(true));
-        } else if (player.hasPotionEffect(PotionEffectType.INCREASE_DAMAGE) && player.getHealth() > maximumHealthToTrigger) {
-            player.removePotionEffect(PotionEffectType.INCREASE_DAMAGE);
+        if (!player.hasPotionEffect(PotionEffectType.STRENGTH) && player.getHealth() <= maximumHealthToTrigger) {
+            player.addPotionEffect(PotionEffectType.STRENGTH.createEffect(Integer.MAX_VALUE, 1).withParticles(false).withAmbient(true));
+        } else if (player.hasPotionEffect(PotionEffectType.STRENGTH) && player.getHealth() > maximumHealthToTrigger) {
+            player.removePotionEffect(PotionEffectType.STRENGTH);
         }
     }
 
     @Override
     public void onTickNotWearingArmor(Player player) {
-        if (player.hasPotionEffect(PotionEffectType.INCREASE_DAMAGE)) {
-            player.removePotionEffect(PotionEffectType.INCREASE_DAMAGE);
+        if (player.hasPotionEffect(PotionEffectType.STRENGTH)) {
+            player.removePotionEffect(PotionEffectType.STRENGTH);
         }
     }
 }

@@ -80,7 +80,7 @@ public class FluffyCloudSpell extends Spell {
         return null;
     }
 
-    public static List<Player> floatingPlayers = new ArrayList<>();
+    public static final List<Player> floatingPlayers = new ArrayList<>();
     public static boolean spawnFluffyCloud(Player player) {
         if (floatingPlayers.contains(player)) return false;
         floatingPlayers.add(player);

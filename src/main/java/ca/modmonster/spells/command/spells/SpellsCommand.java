@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 public class SpellsCommand implements CommandExecutor, TabCompleter {
-    final static Map<String, Subcommand> subcommands = new HashMap<String, Subcommand>() {
+    final static Map<String, Subcommand> subcommands = new HashMap<>() {
         {
             put("give", new GiveCommand());
             put("spawnloot", new SpawnLootCommand());
@@ -28,11 +28,9 @@ public class SpellsCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if (!(sender instanceof Player) || args.length < 1) {
+        if (!(sender instanceof Player player) || args.length < 1) {
             return true;
         }
-
-        Player player = (Player) sender;
 
         // run subcommand
         if (subcommands.containsKey(args[0])) {

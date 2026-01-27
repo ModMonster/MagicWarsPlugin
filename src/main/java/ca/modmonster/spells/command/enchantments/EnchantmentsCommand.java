@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 public class EnchantmentsCommand implements CommandExecutor, TabCompleter {
-    static final Map<String, Subcommand> subcommands = new HashMap<String, Subcommand>() {
+    static final Map<String, Subcommand> subcommands = new HashMap<>() {
         {
             put("give", new GiveCommand());
             put("browse", new BrowseCommand());
@@ -26,11 +26,9 @@ public class EnchantmentsCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if (!(sender instanceof Player) || args.length < 1) {
+        if (!(sender instanceof Player player) || args.length < 1) {
             return true;
         }
-
-        Player player = (Player) sender;
 
         // run subcommand
         if (subcommands.containsKey(args[0])) {

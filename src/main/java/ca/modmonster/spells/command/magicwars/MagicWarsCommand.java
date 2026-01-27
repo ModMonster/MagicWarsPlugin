@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 public class MagicWarsCommand implements CommandExecutor, TabCompleter {
-    final static Map<String, Subcommand> subcommands = new HashMap<String, Subcommand>() {
+    final static Map<String, Subcommand> subcommands = new HashMap<>() {
         {
             put("join", new JoinGameCommand());
             put("leave", new LeaveGameCommand());

@@ -6,19 +6,32 @@ import ca.modmonster.spells.item.enchantment.SwordEnchantment;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 public class ZeusFuryEnchantment extends SwordEnchantment {
-    public ZeusFuryEnchantment() {
-        super(
-            "zeus_fury",
-            "Zeus's Fury",
-            Rarity.MYTHIC,
-            EnchantmentType.SWORD,
-            1,
-            new ArrayList<>()
-        );
+    @Override
+    public String getId() {
+        return "zeus_fury";
+    }
+
+    @Override
+    public String getName() {
+        return "Zeus's Fury";
+    }
+
+    @Override
+    public Rarity getRarity() {
+        return Rarity.MYTHIC;
+    }
+
+    @Override
+    public EnchantmentType getType() {
+        return EnchantmentType.SWORD;
+    }
+
+    @Override
+    public int getMaxLevel() {
+        return 1;
     }
 
     @Override
@@ -28,8 +41,7 @@ public class ZeusFuryEnchantment extends SwordEnchantment {
 
     @Override
     public void onHitEntity(EntityDamageByEntityEvent event, Integer level) {
-        if (!(event.getEntity() instanceof LivingEntity)) return;
-        LivingEntity entity = (LivingEntity) event.getEntity();
+        if (!(event.getEntity() instanceof LivingEntity entity)) return;
 
         if (new Random().nextFloat() < 0.3) {
             entity.getWorld().strikeLightningEffect(entity.getLocation());

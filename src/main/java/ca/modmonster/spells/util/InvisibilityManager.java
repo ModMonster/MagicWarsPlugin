@@ -31,7 +31,7 @@ public class InvisibilityManager {
                 public void onPacketSending(PacketEvent event) {
                     PacketContainer packet = event.getPacket();
                     Player receivingPlayer = event.getPlayer();
-                    int entityId = packet.getIntegers().getValues().get(0);
+                    int entityId = packet.getIntegers().getValues().getFirst();
                     for (Player potentiallyInvisiblePlayer : receivingPlayer.getWorld().getPlayers()) {
                         if (potentiallyInvisiblePlayer.getEntityId() == entityId && isInvisible(potentiallyInvisiblePlayer)) {
                             packet.getSlotStackPairLists().write(0, Arrays.asList(
@@ -123,27 +123,15 @@ public class InvisibilityManager {
     {
         EntityEquipment equipment = entity.getEquipment();
         if (equipment == null) return null;
-        ItemStack item = null;
-        switch (slot) {
-            case MAINHAND:
-                item = equipment.getItemInMainHand();
-                break;
-            case OFFHAND:
-                item = equipment.getItemInOffHand();
-                break;
-            case FEET:
-                item = equipment.getBoots();
-                break;
-            case LEGS:
-                item = equipment.getLeggings();
-                break;
-            case CHEST:
-                item = equipment.getChestplate();
-                break;
-            case HEAD:
-                item = equipment.getHelmet();
-                break;
-        }
+        ItemStack item = switch (slot) {
+            case MAINHAND -> equipment.getItemInMainHand();
+            case OFFHAND -> equipment.getItemInOffHand();
+            case FEET -> equipment.getBoots();
+            case LEGS -> equipment.getLeggings();
+            case CHEST -> equipment.getChestplate();
+            case HEAD -> equipment.getHelmet();
+            default -> null;
+        };
 
         //Sending equipment packet with AIR crashes the client and prints a Netty NPE.
         return item == null || item.getType() == Material.AIR ? null : item;

@@ -15,12 +15,10 @@ import java.util.List;
 public class GiveCommand extends Subcommand {
     @Override
     public void onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if (!(sender instanceof Player)) {
+        if (!(sender instanceof Player player)) {
             sender.sendMessage("[ERROR]: Only players can use this command");
             return;
         }
-
-        Player player = (Player) sender;
 
         if (args.length < 2) {
             player.sendMessage("[ERROR]: Incorrect Syntax!"); // prints incorrect syntax
@@ -30,7 +28,7 @@ public class GiveCommand extends Subcommand {
 
         // loop through
         for (CustomEnchantment enchant : EnchantmentManager.enchantments) {
-            if (args[1].equals(enchant.id)) {
+            if (args[1].equals(enchant.getId())) {
                 int level;
 
                 if (args.length >= 3) {
@@ -41,8 +39,8 @@ public class GiveCommand extends Subcommand {
                     level = 1;
                 }
 
-                if (level > enchant.maxLevel) {
-                    sender.sendMessage("[ERROR]: Maximum level for enchantment '" + enchant.id + "' is " + enchant.maxLevel);
+                if (level > enchant.getMaxLevel()) {
+                    sender.sendMessage("[ERROR]: Maximum level for enchantment '" + enchant.getId() + "' is " + enchant.getMaxLevel());
                     return;
                 }
 
@@ -63,15 +61,15 @@ public class GiveCommand extends Subcommand {
         // enchantments
         if (args.length == 2) {
             for (CustomEnchantment enchantment : EnchantmentManager.enchantments) {
-                possibilities.add(enchantment.id);
+                possibilities.add(enchantment.getId());
             }
         }
 
         // power levels
         else if (args.length == 3) {
             for (CustomEnchantment enchant : EnchantmentManager.enchantments) {
-                if (args[1].equals(enchant.id)) {
-                    for (int lvl = 1; lvl < enchant.maxLevel + 1; lvl++) {
+                if (args[1].equals(enchant.getId())) {
+                    for (int lvl = 1; lvl < enchant.getMaxLevel() + 1; lvl++) {
                         possibilities.add(String.valueOf(lvl));
                     }
                     break;

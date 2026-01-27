@@ -8,18 +8,30 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.potion.PotionEffectType;
 
-import java.util.ArrayList;
-
 public class CloakEnchantment extends ArmorEnchantment {
-    public CloakEnchantment() {
-        super(
-            "cloak",
-            "Cloak",
-            Rarity.RARE,
-            EnchantmentType.ARMOR,
-            3,
-            new ArrayList<>()
-        );
+    @Override
+    public String getId() {
+        return "cloak";
+    }
+
+    @Override
+    public String getName() {
+        return "Cloak";
+    }
+
+    @Override
+    public Rarity getRarity() {
+        return Rarity.RARE;
+    }
+
+    @Override
+    public EnchantmentType getType() {
+        return EnchantmentType.ARMOR;
+    }
+
+    @Override
+    public int getMaxLevel() {
+        return 3;
     }
 
     @Override
@@ -32,8 +44,7 @@ public class CloakEnchantment extends ArmorEnchantment {
 
     @Override
     public void onTakeDamage(EntityDamageEvent event, Integer level) {
-        if (!(event.getEntity() instanceof LivingEntity)) return;
-        LivingEntity entity = (LivingEntity) event.getEntity();
+        if (!(event.getEntity() instanceof LivingEntity entity)) return;
 
         entity.addPotionEffect(PotionEffectType.INVISIBILITY.createEffect(level * 20, 0));
         InvisibilityManager.makeEntityInvisibleForTicks(entity, level * 20);

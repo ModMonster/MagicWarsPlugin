@@ -5,28 +5,43 @@ import ca.modmonster.spells.item.enchantment.ArmorEnchantment;
 import ca.modmonster.spells.item.enchantment.EnchantmentManager;
 import ca.modmonster.spells.item.enchantment.EnchantmentType;
 import ca.modmonster.spells.util.Utilities;
-import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 
-import java.util.Collections;
+import java.util.Objects;
 
 public class EnderInfusedEnchantment extends ArmorEnchantment {
-    public EnderInfusedEnchantment() {
-        super(
-            "ender_infused",
-            "Ender Infused",
-            Rarity.MYTHIC,
-            EnchantmentType.CHESTPLATE,
-            1,
-            Collections.singletonList(
-                NamespacedKey.minecraft("undying")
-            )
-        );
+    @Override
+    public String getId() {
+        return "ender_infused";
+    }
+
+    @Override
+    public String getName() {
+        return "Ender Infused";
+    }
+
+    @Override
+    public Rarity getRarity() {
+        return Rarity.MYTHIC;
+    }
+
+    @Override
+    public EnchantmentType getType() {
+        return EnchantmentType.CHESTPLATE;
+    }
+
+    @Override
+    public int getMaxLevel() {
+        return 1;
+    }
+
+    @Override
+    public String[] getConflictingEnchantments() {
+        return new String[]{"undying"};
     }
 
     @Override
@@ -53,11 +68,8 @@ public class EnderInfusedEnchantment extends ArmorEnchantment {
         entity.getWorld().playSound(entity.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1, 1);
 
         // remove enchantment
-        ItemMeta chestplateMeta = entity.getEquipment().getChestplate().getItemMeta();
-        chestplateMeta.removeEnchant(Enchantment.getByKey(NamespacedKey.minecraft("ender_infused")));
-        entity.getEquipment().getChestplate().setItemMeta(chestplateMeta);
-
-        EnchantmentManager.updateEnchantedItemLore(entity.getEquipment().getChestplate());
+        ItemStack chestplate = Objects.requireNonNull(entity.getEquipment()).getChestplate();
+        EnchantmentManager.removeEnchant(chestplate, "ender_infused");
 
         event.setCancelled(true); // cancel death
     }

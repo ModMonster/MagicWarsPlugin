@@ -46,7 +46,7 @@ public class OnProjectileHit implements Listener {
         String ballType = Utilities.getPersistentEntityTagString(projectile, "projectile_type");
         if (ballType == null) return;
         if (ballType.equals("slowball")) {
-            hitLiving.addPotionEffect(PotionEffectType.SLOW.createEffect(40, 1));
+            hitLiving.addPotionEffect(PotionEffectType.SLOWNESS.createEffect(40, 1));
         }
     }
 

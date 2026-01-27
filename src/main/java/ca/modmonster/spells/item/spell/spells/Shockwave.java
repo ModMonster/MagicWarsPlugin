@@ -92,21 +92,11 @@ class ShockwaveClickAbility extends Ability {
         PlaySound.shoot(event.getPlayer());
 
         final float[] radius = {0f};
-        final float maxRadius;
-
-        switch (power) {
-            case WEAK:
-                maxRadius = 6;
-                break;
-            case STRONG:
-                maxRadius = 9;
-                break;
-            case POWERFUL:
-                maxRadius = 12;
-                break;
-            default:
-                throw new IllegalStateException("Unexpected value: " + power);
-        }
+        final float maxRadius = switch (power) {
+            case WEAK -> 6;
+            case STRONG -> 9;
+            case POWERFUL -> 12;
+        };
 
         // spawn particles
         new BukkitRunnable() {
@@ -125,10 +115,10 @@ class ShockwaveClickAbility extends Ability {
                     double x = (radius[0] * Math.sin(angle));
                     double z = (radius[0] * Math.cos(angle));
 
-                    angle += 0.1;
+                    angle += 0.1f;
 
                     Location spawnLocation = new Location(center.getWorld(), center.getX()+x, center.getY(), center.getZ()+z);
-                    center.getWorld().spawnParticle(Particle.REDSTONE, spawnLocation, 0, 0, 0, 0, new Particle.DustOptions(Color.WHITE, 1));
+                    center.getWorld().spawnParticle(Particle.DUST, spawnLocation, 0, 0, 0, 0, new Particle.DustOptions(Color.WHITE, 1));
 
                     for (Entity entity : center.getWorld().getNearbyEntities(spawnLocation, 0.5f, 0.5f, 0.5f)) {
                         if (entity.equals(event.getPlayer())) continue;

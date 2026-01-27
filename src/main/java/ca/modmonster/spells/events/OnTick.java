@@ -7,7 +7,6 @@ import ca.modmonster.spells.item.spell.spells.minion.ZombieMinion;
 import ca.modmonster.spells.util.Utilities;
 import org.bukkit.Bukkit;
 import org.bukkit.Particle;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EntityEquipment;
@@ -30,24 +29,31 @@ public class OnTick extends BukkitRunnable {
         for (Player player : Bukkit.getOnlinePlayers()) {
             EntityEquipment equipment = player.getEquipment();
 
-            Map<CustomEnchantment, Integer> enchantments = new HashMap<>();
+            Map<CustomEnchantment, Integer> armorEnchantments = new HashMap<>();
 
             for (ItemStack item : equipment.getArmorContents()) {
                 if (item == null || item.getType().isAir()) continue;
 
-                for (Map.Entry<Enchantment, Integer> entry : item.getEnchantments().entrySet()) {
-                    CustomEnchantment enchantment = EnchantmentManager.getEnchantmentFromBukkit(entry.getKey());
+                // add all enchantments from this piece
+                Map<CustomEnchantment, Integer> enchantments = EnchantmentManager.getEnchantmentsFromItem(item);
+                for (Map.Entry<CustomEnchantment, Integer> entry : enchantments.entrySet()) {
+                    // enchantment doesn't already exist; add it
+                    if (!armorEnchantments.containsKey(entry.getKey())) {
+                        armorEnchantments.put(entry.getKey(), entry.getValue());
+                        continue;
+                    }
 
-                    enchantments.put(enchantment, entry.getValue());
+                    // check if current enchantment has a higher level
+                    if (armorEnchantments.get(entry.getKey()) > entry.getValue()) continue;
+                    armorEnchantments.put(entry.getKey(), entry.getValue());
                 }
             }
 
             for (CustomEnchantment enchantment : EnchantmentManager.enchantments) {
-                if (!(enchantment instanceof ArmorEnchantment)) continue;
-                ArmorEnchantment armorEnchantment = (ArmorEnchantment) enchantment;
+                if (!(enchantment instanceof ArmorEnchantment armorEnchantment)) continue;
 
-                if (enchantments.containsKey(enchantment)) {
-                    armorEnchantment.onTick(player, enchantments.get(enchantment));
+                if (armorEnchantments.containsKey(enchantment)) {
+                    armorEnchantment.onTick(player, armorEnchantments.get(enchantment));
                 } else {
                     armorEnchantment.onTickNotWearingArmor(player);
                 }
@@ -68,7 +74,7 @@ public class OnTick extends BukkitRunnable {
 
             if (lifespan <= 0) {
                 // spawn particles
-                entity.getWorld().spawnParticle(Particle.SMOKE_NORMAL, entity.getLocation().add(0, 2, 0), 10, 0.5, 0.5, 0.5, 0);
+                entity.getWorld().spawnParticle(Particle.SMOKE, entity.getLocation().add(0, 2, 0), 10, 0.5, 0.5, 0.5, 0);
 
                 // remove minion from world
                 entity.remove();

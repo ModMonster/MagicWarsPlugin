@@ -86,7 +86,7 @@ class QuickpawClickAbility extends Ability {
 
         // give potion effects
         player.addPotionEffect(PotionEffectType.SPEED.createEffect(100, 1));
-        player.addPotionEffect(PotionEffectType.JUMP.createEffect(100, 1));
+        player.addPotionEffect(PotionEffectType.JUMP_BOOST.createEffect(100, 1));
 
         // play sound effect
         PlaySound.potion(player);

@@ -9,18 +9,33 @@ import org.bukkit.potion.PotionEffectType;
 import java.util.ArrayList;
 import java.util.List;
 
+// kachow
 public class SpeedEnchantment extends ArmorEnchantment {
     final List<Player> affectedPlayers = new ArrayList<>();
 
-    public SpeedEnchantment() {
-        super(
-            "speed",
-            "Speed",
-            Rarity.RARE,
-            EnchantmentType.BOOTS,
-            1,
-            new ArrayList<>()
-        );
+    @Override
+    public String getId() {
+        return "speed";
+    }
+
+    @Override
+    public String getName() {
+        return "Speed";
+    }
+
+    @Override
+    public Rarity getRarity() {
+        return Rarity.RARE;
+    }
+
+    @Override
+    public EnchantmentType getType() {
+        return EnchantmentType.BOOTS;
+    }
+
+    @Override
+    public int getMaxLevel() {
+        return 1;
     }
 
     @Override

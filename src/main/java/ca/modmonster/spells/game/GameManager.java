@@ -59,31 +59,21 @@ public class GameManager {
             // victim died on their own
             EntityDamageEvent.DamageCause lastDamageCause = victim.getLastDamageCause().getCause();
 
-            String deathMessage;
-            switch (lastDamageCause) {
-                case FIRE:
-                case FIRE_TICK:
-                    deathMessage = Utilities.getRandomEntryInArray(deathMessageFormatsFire).replace("%player%", victim.getName());
-                    break;
-                case FALL:
-                    deathMessage = Utilities.getRandomEntryInArray(deathMessageFormatsFall).replace("%player%", victim.getName());
-                    break;
-                case DROWNING:
-                    deathMessage = Utilities.getRandomEntryInArray(deathMessageFormatsDrown).replace("%player%", victim.getName());
-                    break;
-                case ENTITY_EXPLOSION:
-                case BLOCK_EXPLOSION:
-                    deathMessage = Utilities.getRandomEntryInArray(deathMessageFormatsExplode).replace("%player%", victim.getName());
-                    break;
-                case LIGHTNING:
-                    deathMessage = Utilities.getRandomEntryInArray(deathMessageFormatsLightning).replace("%player%", victim.getName());
-                    break;
-                case WITHER:
-                    deathMessage = Utilities.getRandomEntryInArray(deathMessageFormatsWither).replace("%player%", victim.getName());
-                    break;
-                default:
-                    deathMessage = Utilities.getRandomEntryInArray(deathMessageFormats).replace("%player%", victim.getName());
-            }
+            String deathMessage = switch (lastDamageCause) {
+                case FIRE, FIRE_TICK ->
+                        Utilities.getRandomEntryInArray(deathMessageFormatsFire).replace("%player%", victim.getName());
+                case FALL ->
+                        Utilities.getRandomEntryInArray(deathMessageFormatsFall).replace("%player%", victim.getName());
+                case DROWNING ->
+                        Utilities.getRandomEntryInArray(deathMessageFormatsDrown).replace("%player%", victim.getName());
+                case ENTITY_EXPLOSION, BLOCK_EXPLOSION ->
+                        Utilities.getRandomEntryInArray(deathMessageFormatsExplode).replace("%player%", victim.getName());
+                case LIGHTNING ->
+                        Utilities.getRandomEntryInArray(deathMessageFormatsLightning).replace("%player%", victim.getName());
+                case WITHER ->
+                        Utilities.getRandomEntryInArray(deathMessageFormatsWither).replace("%player%", victim.getName());
+                default -> Utilities.getRandomEntryInArray(deathMessageFormats).replace("%player%", victim.getName());
+            };
 
             return Utilities.getStatusMessage(Utilities.StatusMessageType.DEATH, Utilities.stringToComponent(deathMessage));
         }

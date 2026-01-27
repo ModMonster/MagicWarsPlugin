@@ -32,7 +32,7 @@ public class OnInventoryClose implements Listener {
                 Block chest = inventory.getLocation().getBlock();
                 chest.setType(Material.AIR);
 
-                chest.getLocation().getWorld().spawnParticle(Particle.REDSTONE, chest.getLocation().clone().add(0.5, 0.5, 0.5), 5, 0.25, 0.25, 0.25, new Particle.DustOptions(Color.WHITE, 1));
+                chest.getLocation().getWorld().spawnParticle(Particle.DUST, chest.getLocation().clone().add(0.5, 0.5, 0.5), 5, 0.25, 0.25, 0.25, new Particle.DustOptions(Color.WHITE, 1));
             }
         }.runTaskLater(Spells.main, 12);
     }

@@ -31,7 +31,7 @@ public class StartingGameState extends GameState {
             game.startingCountdown -= 1;
             game.updateScoreboards();
 
-            Map<Integer, String> titles = new HashMap<Integer, String>() {
+            Map<Integer, String> titles = new HashMap<>() {
                 {
                     put(10, "&6Starting in 10 seconds");
                     put(3, "&c❸");
@@ -40,7 +40,7 @@ public class StartingGameState extends GameState {
                 }
             };
 
-            Map<Integer, String> subtitles = new HashMap<Integer, String>() {
+            Map<Integer, String> subtitles = new HashMap<>() {
                 {
                     put(3, "&eGet ready to fight!");
                     put(2, "&eGood luck!");

@@ -31,8 +31,7 @@ public class OnEntityDamageByEntity implements Listener {
     }
 
     void handleBackstabberInvisibility(EntityDamageByEntityEvent event) {
-        if (!(event.getDamager() instanceof Player)) return;
-        Player player = (Player) event.getDamager();
+        if (!(event.getDamager() instanceof Player player)) return;
 
         if (Backstabber.attackInvisibilityPlayers.contains(player)) {
             Backstabber.attackInvisibilityPlayers.remove(player);
@@ -43,29 +42,26 @@ public class OnEntityDamageByEntity implements Listener {
 
     void handleCustomSwordEnchantments(EntityDamageByEntityEvent event) {
         Entity damager = event.getDamager();
-        if (!(damager instanceof LivingEntity)) return;
+        if (!(damager instanceof LivingEntity livingEntity)) return;
 
-        LivingEntity livingEntity = (LivingEntity) damager;
         EntityEquipment entityEquipment = livingEntity.getEquipment();
         if (entityEquipment == null) return;
         ItemStack item = entityEquipment.getItemInMainHand();
 
-        if (item == null || item.getType().equals(Material.AIR)) return;
+        if (item.getType().equals(Material.AIR)) return;
 
         for (CustomEnchantment enchantment : EnchantmentManager.enchantments) {
             if (!(enchantment instanceof SwordEnchantment)) continue;
 
-            if (item.getItemMeta().hasEnchant(enchantment.bukkitEnchantment)) {
-                Integer enchantLevel = item.getEnchantmentLevel(enchantment.bukkitEnchantment);
-
+            int enchantLevel = EnchantmentManager.getEnchantLevel(item, enchantment);
+            if (enchantLevel > 0) {
                 ((SwordEnchantment) enchantment).onHitEntity(event, enchantLevel);
             }
         }
     }
 
     void makeMinionsTargetEntity(EntityDamageByEntityEvent event) {
-        if (event.getEntity() instanceof LivingEntity) {
-            LivingEntity entity = (LivingEntity) event.getEntity();
+        if (event.getEntity() instanceof LivingEntity entity) {
 
             for (Map.Entry<Entity, UUID> entry : ZombieMinion.playerMinions.entrySet()) {
                 // get entry

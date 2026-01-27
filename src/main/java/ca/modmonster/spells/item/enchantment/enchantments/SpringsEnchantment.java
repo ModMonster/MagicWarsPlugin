@@ -12,15 +12,29 @@ import java.util.List;
 public class SpringsEnchantment extends ArmorEnchantment {
     final List<Player> affectedPlayers = new ArrayList<>();
 
-    public SpringsEnchantment() {
-        super(
-            "springs",
-            "Springs",
-            Rarity.RARE,
-            EnchantmentType.BOOTS,
-            2,
-            new ArrayList<>()
-        );
+    @Override
+    public String getId() {
+        return "springs";
+    }
+
+    @Override
+    public String getName() {
+        return "Springs";
+    }
+
+    @Override
+    public Rarity getRarity() {
+        return Rarity.RARE;
+    }
+
+    @Override
+    public EnchantmentType getType() {
+        return EnchantmentType.BOOTS;
+    }
+
+    @Override
+    public int getMaxLevel() {
+        return 2;
     }
 
     @Override
@@ -30,8 +44,8 @@ public class SpringsEnchantment extends ArmorEnchantment {
 
     @Override
     public void onTick(Player player, Integer level) {
-        if (!affectedPlayers.contains(player) || (affectedPlayers.contains(player) && !player.hasPotionEffect(PotionEffectType.JUMP))) {
-            player.addPotionEffect(PotionEffectType.JUMP.createEffect(Integer.MAX_VALUE, (level * 2) - 1).withParticles(false).withAmbient(true));
+        if (!affectedPlayers.contains(player) || (affectedPlayers.contains(player) && !player.hasPotionEffect(PotionEffectType.JUMP_BOOST))) {
+            player.addPotionEffect(PotionEffectType.JUMP_BOOST.createEffect(Integer.MAX_VALUE, (level * 2) - 1).withParticles(false).withAmbient(true));
             affectedPlayers.add(player);
         }
     }
@@ -39,7 +53,7 @@ public class SpringsEnchantment extends ArmorEnchantment {
     @Override
     public void onTickNotWearingArmor(Player player) {
         if (affectedPlayers.contains(player)) {
-            player.removePotionEffect(PotionEffectType.JUMP);
+            player.removePotionEffect(PotionEffectType.JUMP_BOOST);
             affectedPlayers.remove(player);
         }
     }

@@ -30,7 +30,7 @@ public class BrowseEnchantmentsGui {
         inventory.clear();
 
         for (CustomEnchantment enchantment : EnchantmentManager.enchantments) {
-            for (int i = 1; i < enchantment.maxLevel + 1; i++) {
+            for (int i = 1; i < enchantment.getMaxLevel() + 1; i++) {
                 inventory.addItem(EnchantmentManager.getEnchantedBook(enchantment, i));
             }
         }
@@ -42,7 +42,7 @@ public class BrowseEnchantmentsGui {
      * @return best material applicable to the item
      */
     public static Material getApplicableItem(@NotNull EnchantmentType type) {
-        Map<EnchantmentType, Material> applicableItemMap = new HashMap<EnchantmentType, Material>() {
+        Map<EnchantmentType, Material> applicableItemMap = new HashMap<>() {
             {
                 put(EnchantmentType.SWORD, Material.DIAMOND_SWORD);
                 put(EnchantmentType.ARMOR, Material.DIAMOND_CHESTPLATE);
@@ -68,22 +68,31 @@ public class BrowseEnchantmentsGui {
             return;
         }
 
+        // cancel event
+        event.setCancelled(true);
+
         if (event.isShiftClick()) {
             // give player enchanted item
-            Map<CustomEnchantment, Integer> enchantments = EnchantmentManager.getEnchantmentsFromBook(event.getCurrentItem());
+            ItemStack clicked = event.getCurrentItem();
+            if (clicked == null) return;
 
-            ItemStack newItem = new ItemStack(getApplicableItem(enchantments.keySet().stream().findFirst().get().type));
+            // find the enchantment present on this book
+            Map<CustomEnchantment, Integer> enchantments = EnchantmentManager.getEnchantmentsFromItem(clicked);
+            if (enchantments.isEmpty()) return;
+            CustomEnchantment bookEnchant = enchantments.keySet().stream().findFirst().get();
 
-            EnchantmentManager.enchantItem(newItem, enchantments.keySet().stream().findFirst().get().bukkitEnchantment, enchantments.get(enchantments.keySet().stream().findFirst().get()));
+            // get an applicable item for this enchantment and enchant it
+            ItemStack newItem = new ItemStack(getApplicableItem(bookEnchant.getType()));
+            int level = enchantments.get(bookEnchant);
+            EnchantmentManager.addEnchant(newItem, bookEnchant, level);
 
             event.getWhoClicked().getInventory().addItem(newItem);
         } else {
             // give player book
-            event.getWhoClicked().getInventory().addItem(event.getCurrentItem());
+            ItemStack clicked = event.getCurrentItem();
+            if (clicked == null) return;
+            event.getWhoClicked().getInventory().addItem(clicked);
         }
-
-        // cancel event
-        event.setCancelled(true);
     }
 
     public void openInventory(final HumanEntity entity) {

@@ -11,8 +11,8 @@ import org.bukkit.entity.Player;
 import java.time.Duration;
 
 public class BorderShrinkGameEvent extends GameEvent {
-    public int shrinkSize;
-    public int shrinkTime;
+    public final int shrinkSize;
+    public final int shrinkTime;
 
     public BorderShrinkGameEvent(int timeToRun, int shrinkSize, int shrinkTime) {
         super(timeToRun);
@@ -43,6 +43,6 @@ public class BorderShrinkGameEvent extends GameEvent {
         }
 
         // shrink world border
-        GameManager.activeGame.world.bukkitWorld.getWorldBorder().setSize(shrinkSize, shrinkTime);
+        GameManager.activeGame.world.bukkitWorld.getWorldBorder().changeSize(shrinkSize, shrinkTime);
     }
 }

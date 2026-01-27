@@ -113,7 +113,7 @@ class WitherBallSpellOnClick extends Ability {
 
                 // prevent leaving world border
                 if (!Utilities.isLocationWithinWorldBorder(skull.getLocation())) {
-                    skull.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, skull.getLocation(), 1);
+                    skull.getWorld().spawnParticle(Particle.EXPLOSION, skull.getLocation(), 1);
                     skull.getWorld().playSound(skull.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 1, 1);
                     skull.remove();
                     cancel();
@@ -121,24 +121,23 @@ class WitherBallSpellOnClick extends Ability {
 
                 // wither entities
                 for (Entity entity : skull.getNearbyEntities(3, 3, 3)) {
-                    if (!(entity instanceof LivingEntity)) continue;
+                    if (!(entity instanceof LivingEntity livingEntity)) continue;
                     if (entity.equals(player)) continue;
                     Player minionOwner = Minion.getMinionOwner(entity);
                     if (minionOwner != null && minionOwner.equals(player)) continue;
-                    LivingEntity livingEntity = (LivingEntity) entity;
                     if (livingEntity.hasPotionEffect(PotionEffectType.WITHER)) continue;
 
                     livingEntity.addPotionEffect(PotionEffectType.WITHER.createEffect(150, 1));
                 }
 
                 // wither blocks
-                Map<Material, List<Material>> witherMaterials = new HashMap<Material, List<Material>>() {
+                Map<Material, List<Material>> witherMaterials = new HashMap<>() {
                     {
                         put(Material.GRASS_BLOCK, Arrays.asList(
-                            Material.SOUL_SOIL,
-                            Material.SOUL_SAND,
-                            Material.COAL_BLOCK,
-                            Material.BLACKSTONE
+                                Material.SOUL_SOIL,
+                                Material.SOUL_SAND,
+                                Material.COAL_BLOCK,
+                                Material.BLACKSTONE
                         ));
                     }
                 };
@@ -150,10 +149,10 @@ class WitherBallSpellOnClick extends Ability {
                     if (new Random().nextInt(10) < 9) continue;
 
                     // spawn wither skeleton minions
-                    if (new Random().nextInt(50) >= 49) {
+                    if (new Random().nextInt(50) == 49) {
                         Location spawnLocation = block.getLocation();
 
-                        spawnLocation.getWorld().spawnParticle(Particle.SMOKE_LARGE, spawnLocation, 0);
+                        spawnLocation.getWorld().spawnParticle(Particle.LARGE_SMOKE, spawnLocation, 0);
                     }
 
                     if (!witherMaterials.containsKey(block.getType())) continue;

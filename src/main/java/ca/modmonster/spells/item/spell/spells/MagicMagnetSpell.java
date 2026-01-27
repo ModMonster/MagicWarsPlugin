@@ -102,16 +102,11 @@ class MagicMagnetOnClick extends Ability {
     }
 
     int getMaxDistance(Power power) {
-        switch (power) {
-            case WEAK:
-                return 24;
-            case STRONG:
-                return 32;
-            case POWERFUL:
-                return 40;
-            default:
-                return 0;
-        }
+        return switch (power) {
+            case WEAK -> 24;
+            case STRONG -> 32;
+            case POWERFUL -> 40;
+        };
     }
 
     @SuppressWarnings("SameReturnValue")

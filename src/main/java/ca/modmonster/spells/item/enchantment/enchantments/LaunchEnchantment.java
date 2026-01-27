@@ -9,18 +9,30 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
-import java.util.ArrayList;
-
 public class LaunchEnchantment extends SwordEnchantment {
-    public LaunchEnchantment() {
-        super(
-            "launch",
-            "Launch",
-            Rarity.RARE,
-            EnchantmentType.SWORD,
-            3,
-            new ArrayList<>()
-        );
+    @Override
+    public String getId() {
+        return "launch";
+    }
+
+    @Override
+    public String getName() {
+        return "Launch";
+    }
+
+    @Override
+    public Rarity getRarity() {
+        return Rarity.RARE;
+    }
+
+    @Override
+    public EnchantmentType getType() {
+        return EnchantmentType.SWORD;
+    }
+
+    @Override
+    public int getMaxLevel() {
+        return 3;
     }
 
     @Override
@@ -30,8 +42,7 @@ public class LaunchEnchantment extends SwordEnchantment {
 
     @Override
     public void onHitEntity(EntityDamageByEntityEvent event, Integer level) {
-        if (!(event.getEntity() instanceof LivingEntity)) return;
-        LivingEntity entity = (LivingEntity) event.getEntity();
+        if (!(event.getEntity() instanceof LivingEntity entity)) return;
 
         new BukkitRunnable() {
             @Override

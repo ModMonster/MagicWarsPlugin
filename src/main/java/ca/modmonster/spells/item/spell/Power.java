@@ -22,44 +22,31 @@ public enum Power {
     }
 
     public static Power get(Integer number) {
-        switch (number) {
-            case 1:
-                return Power.WEAK;
-            case 2:
-                return Power.STRONG;
-            case 3:
-                return Power.POWERFUL;
-        }
+        return switch (number) {
+            case 1 -> Power.WEAK;
+            case 2 -> Power.STRONG;
+            case 3 -> Power.POWERFUL;
+            default -> null;
+        };
 
-        return null;
     }
 
     public static Power get(String level) {
-        switch (level.toUpperCase(Locale.ROOT)) {
-            case "WEAK":
-            case "1":
-                return Power.WEAK;
-            case "STRONG":
-            case "2":
-                return Power.STRONG;
-            case "POWERFUL":
-            case "3":
-                return Power.POWERFUL;
-        }
+        return switch (level.toUpperCase(Locale.ROOT)) {
+            case "WEAK", "1" -> Power.WEAK;
+            case "STRONG", "2" -> Power.STRONG;
+            case "POWERFUL", "3" -> Power.POWERFUL;
+            default -> null;
+        };
 
-        return null;
     }
 
     public static String getLevelMeter(Power power) {
-        switch (power) {
-            case WEAK:
-                return Icons.STAR + Icons.STAR_OUTLINE + Icons.STAR_OUTLINE; // ★☆☆
-            case STRONG:
-                return Icons.STAR + Icons.STAR + Icons.STAR_OUTLINE; // ★★☆
-            case POWERFUL:
-                return Icons.STAR + Icons.STAR + Icons.STAR; // ★★★
-        }
+        return switch (power) {
+            case WEAK -> Icons.STAR + Icons.STAR_OUTLINE + Icons.STAR_OUTLINE; // ★☆☆
+            case STRONG -> Icons.STAR + Icons.STAR + Icons.STAR_OUTLINE; // ★★☆
+            case POWERFUL -> Icons.STAR + Icons.STAR + Icons.STAR; // ★★★
+        };
 
-        return null;
     }
 }

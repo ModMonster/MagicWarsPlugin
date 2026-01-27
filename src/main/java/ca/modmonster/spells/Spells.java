@@ -8,7 +8,6 @@ import ca.modmonster.spells.database.models.ServerModel;
 import ca.modmonster.spells.events.*;
 import ca.modmonster.spells.game.GameManager;
 import ca.modmonster.spells.game.LootChest;
-import ca.modmonster.spells.item.enchantment.EnchantmentManager;
 import ca.modmonster.spells.util.InvisibilityManager;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -40,6 +39,8 @@ import java.sql.SQLException;
 // TODO: dont show dead players in world when spectating
 
 // TO TEST
+// falling blocks (webslinger)
+// enchantments
 
 public final class Spells extends JavaPlugin {
     public static YamlConfiguration mapConfig;
@@ -103,9 +104,6 @@ public final class Spells extends JavaPlugin {
 
         this.getCommand("magicwars").setExecutor(new MagicWarsCommand());
         this.getCommand("mw").setExecutor(new MagicWarsCommand());
-
-        // register enchantments
-        EnchantmentManager.init();
 
         // register invisibility listeners
         InvisibilityManager.init();

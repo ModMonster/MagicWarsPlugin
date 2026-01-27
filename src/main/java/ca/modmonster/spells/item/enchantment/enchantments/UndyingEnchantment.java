@@ -5,29 +5,45 @@ import ca.modmonster.spells.item.enchantment.ArmorEnchantment;
 import ca.modmonster.spells.item.enchantment.EnchantmentManager;
 import ca.modmonster.spells.item.enchantment.EnchantmentType;
 import org.bukkit.EntityEffect;
-import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import java.util.Collections;
+import java.util.Objects;
 
+// omg like undyne??? undyne the undying?!?1!?!?/
 public class UndyingEnchantment extends ArmorEnchantment {
-    public UndyingEnchantment() {
-        super(
-            "undying",
-            "Undying",
-            Rarity.LEGENDARY,
-            EnchantmentType.CHESTPLATE,
-            1,
-            Collections.singletonList(
-                NamespacedKey.minecraft("ender_infused")
-            )
-        );
+    @Override
+    public String getId() {
+        return "undying";
+    }
+
+    @Override
+    public String getName() {
+        return "Undying";
+    }
+
+    @Override
+    public Rarity getRarity() {
+        return Rarity.LEGENDARY;
+    }
+
+    @Override
+    public EnchantmentType getType() {
+        return EnchantmentType.CHESTPLATE;
+    }
+
+    @Override
+    public int getMaxLevel() {
+        return 1;
+    }
+
+    @Override
+    public String[] getConflictingEnchantments() {
+        return new String[]{"ender_infused"};
     }
 
     @Override
@@ -56,14 +72,12 @@ public class UndyingEnchantment extends ArmorEnchantment {
         entity.getWorld().playSound(entity.getLocation(), Sound.ITEM_TOTEM_USE, 1, 1);
 
         // show totem animation
-        entity.playEffect(EntityEffect.TOTEM_RESURRECT);
+        entity.playEffect(EntityEffect.PROTECTED_FROM_DEATH);
+        // TODO: check that this doesn't show something stupid
 
         // remove enchantment
-        ItemMeta chestplateMeta = entity.getEquipment().getChestplate().getItemMeta();
-        chestplateMeta.removeEnchant(Enchantment.getByKey(NamespacedKey.minecraft("undying")));
-        entity.getEquipment().getChestplate().setItemMeta(chestplateMeta);
-
-        EnchantmentManager.updateEnchantedItemLore(entity.getEquipment().getChestplate());
+        ItemStack chestplate = Objects.requireNonNull(entity.getEquipment()).getChestplate();
+        EnchantmentManager.removeEnchant(chestplate, "undying");
 
         event.setCancelled(true); // cancel death
     }

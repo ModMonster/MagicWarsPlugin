@@ -88,21 +88,11 @@ class SpearOfLightClickAbility extends Ability {
     public boolean onUse(PlayerInteractEvent event, Power power) {
         Player player = event.getPlayer();
 
-        int maxParticles;
-
-        switch (power) {
-            case WEAK:
-                maxParticles = 12;
-                break;
-            case STRONG:
-                maxParticles = 16;
-                break;
-            case POWERFUL:
-                maxParticles = 24;
-                break;
-            default:
-                maxParticles = 0;
-        }
+        int maxParticles = switch (power) {
+            case WEAK -> 12;
+            case STRONG -> 16;
+            case POWERFUL -> 24;
+        };
 
         // play shoot sound
         PlaySound.shoot(player);
@@ -120,7 +110,7 @@ class SpearOfLightClickAbility extends Ability {
 
                 // spawn particles
                 player.getWorld().spawnParticle(Particle.END_ROD, location, 1, 0, 0, 0, 0.025);
-                player.getWorld().spawnParticle(Particle.REDSTONE, location, 2, 0.1, 0.1, 0.1, 0, new Particle.DustOptions(Color.SILVER, 0.75f));
+                player.getWorld().spawnParticle(Particle.DUST, location, 2, 0.1, 0.1, 0.1, 0, new Particle.DustOptions(Color.SILVER, 0.75f));
 
                 RaycastTarget raycastTargetAtLocation = Utilities.raycastTargetFromLocation(player, location, 0.5f);
 
@@ -145,16 +135,11 @@ class SpearOfLightClickAbility extends Ability {
     }
 
     int getDamage(Power power) {
-        switch (power) {
-            case WEAK:
-                return 4;
-            case STRONG:
-                return 5;
-            case POWERFUL:
-                return 6;
-            default:
-                return 0;
-        }
+        return switch (power) {
+            case WEAK -> 4;
+            case STRONG -> 5;
+            case POWERFUL -> 6;
+        };
     }
 
     @Override

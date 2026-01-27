@@ -121,7 +121,7 @@ class BlastJumpRightClickAbility extends Ability {
         // prevent next fall
         OnEntityDamage.addFallProofEntity(player);
 
-        player.getWorld().spawnParticle(Particle.EXPLOSION_NORMAL, player.getLocation(), 10, 1, 1, 1, 0.1f);
+        player.getWorld().spawnParticle(Particle.POOF, player.getLocation(), 10, 1, 1, 1, 0.1f);
 
         // play sound
         PlaySound.explode(player);

@@ -17,24 +17,13 @@ import java.util.Locale;
 public class SetGameStateCommand extends Subcommand {
     @Override
     public void onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        GameState state;
-
-        switch (args[1].toUpperCase(Locale.ROOT)) {
-            case "WAITING":
-                state = new WaitingGameState();
-                break;
-            case "WAITING_STARTING":
-                state = new WaitingStartingGameState();
-                break;
-            case "STARTING":
-                state = new StartingGameState();
-                break;
-            case "ACTIVE":
-                state = new ActiveGameState();
-                break;
-            default:
-                state = null;
-        }
+        GameState state = switch (args[1].toUpperCase(Locale.ROOT)) {
+            case "WAITING" -> new WaitingGameState();
+            case "WAITING_STARTING" -> new WaitingStartingGameState();
+            case "STARTING" -> new StartingGameState();
+            case "ACTIVE" -> new ActiveGameState();
+            default -> null;
+        };
 
         if (state == null) {
             sender.sendMessage(Utilities.stringToComponent("&7[&c&lERROR&7]: &eInvalid state."));

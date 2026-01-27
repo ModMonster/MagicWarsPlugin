@@ -12,15 +12,29 @@ import java.util.List;
 public class NightVisionEnchantment extends ArmorEnchantment {
     final List<Player> affectedPlayers = new ArrayList<>();
 
-    public NightVisionEnchantment() {
-        super(
-            "night_vision",
-            "Night Vision",
-            Rarity.UNCOMMON,
-            EnchantmentType.HELMET,
-            1,
-            new ArrayList<>()
-        );
+    @Override
+    public String getId() {
+        return "night_vision";
+    }
+
+    @Override
+    public String getName() {
+        return "Night Vision";
+    }
+
+    @Override
+    public Rarity getRarity() {
+        return Rarity.UNCOMMON;
+    }
+
+    @Override
+    public EnchantmentType getType() {
+        return EnchantmentType.HELMET;
+    }
+
+    @Override
+    public int getMaxLevel() {
+        return 1;
     }
 
     @Override

@@ -5,19 +5,32 @@ import ca.modmonster.spells.item.enchantment.ArmorEnchantment;
 import ca.modmonster.spells.item.enchantment.EnchantmentType;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 public class MoltenEnchantment extends ArmorEnchantment {
-    public MoltenEnchantment() {
-        super(
-            "molten",
-            "Molten",
-            Rarity.RARE,
-            EnchantmentType.ARMOR,
-            3,
-            new ArrayList<>()
-        );
+    @Override
+    public String getId() {
+        return "molten";
+    }
+
+    @Override
+    public String getName() {
+        return "Molten";
+    }
+
+    @Override
+    public Rarity getRarity() {
+        return Rarity.RARE;
+    }
+
+    @Override
+    public EnchantmentType getType() {
+        return EnchantmentType.ARMOR;
+    }
+
+    @Override
+    public int getMaxLevel() {
+        return 3;
     }
 
     @Override

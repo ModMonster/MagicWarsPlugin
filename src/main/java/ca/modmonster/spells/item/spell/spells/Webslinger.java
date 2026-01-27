@@ -89,7 +89,10 @@ class WebslingerClickAbility extends Ability {
         Player player = event.getPlayer();
 
         // spawn cobweb projectile
-        FallingBlock block = player.getWorld().spawnFallingBlock(player.getEyeLocation(), Material.COBWEB.createBlockData());
+
+        FallingBlock block = player.getWorld().spawn(player.getEyeLocation(), FallingBlock.class, (fb) -> {
+            fb.setBlockData(Material.COBWEB.createBlockData());
+        });
         block.setVelocity(player.getLocation().getDirection().multiply(2));
         block.setDropItem(false);
 

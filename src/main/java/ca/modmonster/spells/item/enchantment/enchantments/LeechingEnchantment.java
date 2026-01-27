@@ -7,18 +7,30 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
-import java.util.ArrayList;
-
 public class LeechingEnchantment extends SwordEnchantment {
-    public LeechingEnchantment() {
-        super(
-            "leeching",
-            "Leeching",
-            Rarity.MYTHIC,
-            EnchantmentType.SWORD,
-            1,
-            new ArrayList<>()
-        );
+    @Override
+    public String getId() {
+        return "leeching";
+    }
+
+    @Override
+    public String getName() {
+        return "Leeching";
+    }
+
+    @Override
+    public Rarity getRarity() {
+        return Rarity.MYTHIC;
+    }
+
+    @Override
+    public EnchantmentType getType() {
+        return EnchantmentType.SWORD;
+    }
+
+    @Override
+    public int getMaxLevel() {
+        return 1;
     }
 
     @Override
@@ -28,14 +40,12 @@ public class LeechingEnchantment extends SwordEnchantment {
 
     @Override
     public void onHitEntity(EntityDamageByEntityEvent event, Integer level) {
-        if (!(event.getEntity() instanceof LivingEntity)) return;
-        if (!(event.getDamager() instanceof LivingEntity)) return;
-        LivingEntity entity = (LivingEntity) event.getEntity();
-        LivingEntity damager = (LivingEntity) event.getDamager();
+        if (!(event.getEntity() instanceof LivingEntity entity)) return;
+        if (!(event.getDamager() instanceof LivingEntity damager)) return;
 
         double newHealth = damager.getHealth() + (event.getDamage() / 3);
 
         // heal
-        damager.setHealth(Math.min(newHealth, entity.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue()));
+        damager.setHealth(Math.min(newHealth, entity.getAttribute(Attribute.MAX_HEALTH).getValue()));
     }
 }

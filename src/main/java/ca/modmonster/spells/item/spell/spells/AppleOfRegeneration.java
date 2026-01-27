@@ -87,7 +87,7 @@ class AppleOfRegenerationRightClickAbility extends Ability {
     public boolean onUse(PlayerInteractEvent event, Power power) {
         Player player = event.getPlayer();
 
-        if (player.getHealth() >= event.getPlayer().getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue()) {
+        if (player.getHealth() >= event.getPlayer().getAttribute(Attribute.MAX_HEALTH).getValue()) {
             PlaySound.error(player);
             player.sendMessage(Utilities.stringToComponent("&cYour health is already full!"));
             return false;
@@ -100,7 +100,7 @@ class AppleOfRegenerationRightClickAbility extends Ability {
         player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EAT, 1, 1);
 
         // heal player
-        double maxHealth = player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
+        double maxHealth = player.getAttribute(Attribute.MAX_HEALTH).getValue();
         double newHealth = player.getHealth() + 8;
 
         player.setHealth(Math.min(newHealth, maxHealth));

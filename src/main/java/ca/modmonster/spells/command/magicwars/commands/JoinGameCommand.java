@@ -14,7 +14,7 @@ import java.util.List;
 public class JoinGameCommand extends Subcommand {
     @Override
     public void onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if (!(sender instanceof Player)) {
+        if (!(sender instanceof Player player)) {
             sender.sendMessage(Utilities.stringToComponent("&7[&c&lERROR&7]: &eOnly players can use this command"));
             return;
         }
@@ -23,8 +23,6 @@ public class JoinGameCommand extends Subcommand {
             sender.sendMessage(Utilities.stringToComponent("&7[&c&lERROR&7]: &eYou must specify a game to join!"));
             return;
         }
-
-        Player player = (Player) sender;
 
         // join game
         String result = GameManager.activeGame.join(player);

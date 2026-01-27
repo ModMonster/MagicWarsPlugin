@@ -77,7 +77,20 @@ public class Utilities {
         ItemMeta meta = item.getItemMeta();
 
         // store value
-        meta.getPersistentDataContainer().set(new NamespacedKey(Spells.main, tag), PersistentDataType.INTEGER, value? 1 : 0);
+        meta.getPersistentDataContainer().set(new NamespacedKey(Spells.main, tag), PersistentDataType.BOOLEAN, value);
+
+        // set item metadata
+        item.setItemMeta(meta);
+
+        return item;
+    }
+
+    public static ItemStack setPersistentItemTag(ItemStack item, String tag, int[] value) {
+        // get item metadata
+        ItemMeta meta = item.getItemMeta();
+
+        // store value
+        meta.getPersistentDataContainer().set(new NamespacedKey(Spells.main, tag), PersistentDataType.INTEGER_ARRAY, value);
 
         // set item metadata
         item.setItemMeta(meta);
@@ -112,7 +125,15 @@ public class Utilities {
     public static Boolean getPersistentItemTagBoolean(ItemStack item, String tag) {
         // get value
         if (item.getItemMeta() != null) {
-            return item.getItemMeta().getPersistentDataContainer().get(new NamespacedKey(Spells.main, tag), PersistentDataType.INTEGER) == 1;
+            return item.getItemMeta().getPersistentDataContainer().get(new NamespacedKey(Spells.main, tag), PersistentDataType.BOOLEAN);
+        }
+        return null;
+    }
+
+    public static int[] getPersistentItemTagIntArray(ItemStack item, String tag) {
+        // get value
+        if (item.getItemMeta() != null) {
+            return item.getItemMeta().getPersistentDataContainer().get(new NamespacedKey(Spells.main, tag), PersistentDataType.INTEGER_ARRAY);
         }
         return null;
     }
@@ -179,10 +200,10 @@ public class Utilities {
     public static ItemStack setGlowing(ItemStack itemStack, boolean glow) {
         if (glow) {
             itemStack.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-            itemStack.addUnsafeEnchantment(itemStack.getType().equals(Material.BOW)? Enchantment.PROTECTION_ENVIRONMENTAL : Enchantment.ARROW_DAMAGE, 1);
+            itemStack.addUnsafeEnchantment(itemStack.getType().equals(Material.BOW)? Enchantment.PROTECTION : Enchantment.POWER, 1);
         } else {
             itemStack.removeItemFlags(ItemFlag.HIDE_ENCHANTS);
-            itemStack.removeEnchantment(itemStack.getType().equals(Material.BOW)? Enchantment.PROTECTION_ENVIRONMENTAL : Enchantment.ARROW_DAMAGE);
+            itemStack.removeEnchantment(itemStack.getType().equals(Material.BOW)? Enchantment.PROTECTION : Enchantment.POWER);
         }
 
         return itemStack;
@@ -237,8 +258,7 @@ public class Utilities {
             }
 
             if (!skip) {
-                if (entity instanceof LivingEntity) {
-                    LivingEntity livingEntity = (LivingEntity) entity;
+                if (entity instanceof LivingEntity livingEntity) {
 
                     return new RaycastTarget(
                         entity,
@@ -400,7 +420,7 @@ public class Utilities {
      * @return whether the given location is within the boundaries of the world (as specified in maps.yml config)
      */
     public static boolean isLocationWithinWorldBounds(@NotNull Location location, @NotNull WorldMap map) {
-        double worldBorderSize = map.worldBorderSize / 2;
+        double worldBorderSize = map.worldBorderSize / 2.0;
         Location worldBorderCenter = location.getWorld().getWorldBorder().getCenter();
 
         Location lowestCorner = new Location(location.getWorld(), worldBorderCenter.getX() - worldBorderSize, 0, worldBorderCenter.getZ() - worldBorderSize);
@@ -429,7 +449,10 @@ public class Utilities {
         teleportLocationNoY.setZ(Math.round(teleportLocationNoY.getZ()));
 
         Location teleportLocation = getHighestBlockYAtLocation(teleportLocationNoY);
-
+        if (teleportLocation == null) {
+            teleportLocation = teleportLocationNoY;
+            teleportLocation.setY(180);
+        }
         centerLocationOnBlock(teleportLocation);
 
         return teleportLocation;
@@ -446,61 +469,19 @@ public class Utilities {
         if (!interactable)
             return false;
 
-        switch (material)
-        {
-            case ACACIA_STAIRS:
-            case ANDESITE_STAIRS:
-            case BIRCH_STAIRS:
-            case BLACKSTONE_STAIRS:
-            case BRICK_STAIRS:
-            case COBBLESTONE_STAIRS:
-            case CRIMSON_STAIRS:
-            case DARK_OAK_STAIRS:
-            case DARK_PRISMARINE_STAIRS:
-            case DIORITE_STAIRS:
-            case END_STONE_BRICK_STAIRS:
-            case GRANITE_STAIRS:
-            case JUNGLE_STAIRS:
-            case MOSSY_COBBLESTONE_STAIRS:
-            case MOSSY_STONE_BRICK_STAIRS:
-            case NETHER_BRICK_STAIRS:
-            case OAK_STAIRS:
-            case POLISHED_ANDESITE_STAIRS:
-            case POLISHED_BLACKSTONE_BRICK_STAIRS:
-            case POLISHED_BLACKSTONE_STAIRS:
-            case POLISHED_DIORITE_STAIRS:
-            case POLISHED_GRANITE_STAIRS:
-            case PRISMARINE_BRICK_STAIRS:
-            case PRISMARINE_STAIRS:
-            case PURPUR_STAIRS:
-            case QUARTZ_STAIRS:
-            case RED_NETHER_BRICK_STAIRS:
-            case RED_SANDSTONE_STAIRS:
-            case SANDSTONE_STAIRS:
-            case SMOOTH_QUARTZ_STAIRS:
-            case SMOOTH_RED_SANDSTONE_STAIRS:
-            case SMOOTH_SANDSTONE_STAIRS:
-            case SPRUCE_STAIRS:
-            case STONE_BRICK_STAIRS:
-            case STONE_STAIRS:
-            case WARPED_STAIRS:
-            case ACACIA_FENCE:
-            case BIRCH_FENCE:
-            case CRIMSON_FENCE:
-            case DARK_OAK_FENCE:
-            case JUNGLE_FENCE:
-            case MOVING_PISTON:
-            case NETHER_BRICK_FENCE:
-            case OAK_FENCE:
-            case PUMPKIN:
-            case REDSTONE_ORE:
-            case REDSTONE_WIRE:
-            case SPRUCE_FENCE:
-            case WARPED_FENCE:
-                return false;
-            default:
-                return true;
-        }
+        return switch (material) {
+            case ACACIA_STAIRS, ANDESITE_STAIRS, BIRCH_STAIRS, BLACKSTONE_STAIRS, BRICK_STAIRS, COBBLESTONE_STAIRS,
+                 CRIMSON_STAIRS, DARK_OAK_STAIRS, DARK_PRISMARINE_STAIRS, DIORITE_STAIRS, END_STONE_BRICK_STAIRS,
+                 GRANITE_STAIRS, JUNGLE_STAIRS, MOSSY_COBBLESTONE_STAIRS, MOSSY_STONE_BRICK_STAIRS, NETHER_BRICK_STAIRS,
+                 OAK_STAIRS, POLISHED_ANDESITE_STAIRS, POLISHED_BLACKSTONE_BRICK_STAIRS, POLISHED_BLACKSTONE_STAIRS,
+                 POLISHED_DIORITE_STAIRS, POLISHED_GRANITE_STAIRS, PRISMARINE_BRICK_STAIRS, PRISMARINE_STAIRS,
+                 PURPUR_STAIRS, QUARTZ_STAIRS, RED_NETHER_BRICK_STAIRS, RED_SANDSTONE_STAIRS, SANDSTONE_STAIRS,
+                 SMOOTH_QUARTZ_STAIRS, SMOOTH_RED_SANDSTONE_STAIRS, SMOOTH_SANDSTONE_STAIRS, SPRUCE_STAIRS,
+                 STONE_BRICK_STAIRS, STONE_STAIRS, WARPED_STAIRS, ACACIA_FENCE, BIRCH_FENCE, CRIMSON_FENCE,
+                 DARK_OAK_FENCE, JUNGLE_FENCE, MOVING_PISTON, NETHER_BRICK_FENCE, OAK_FENCE, PUMPKIN, REDSTONE_ORE,
+                 REDSTONE_WIRE, SPRUCE_FENCE, WARPED_FENCE -> false;
+            default -> true;
+        };
     }
 
     public static List<Block> getBlocks(Location start, int radius){
@@ -529,40 +510,20 @@ public class Utilities {
      * @return the EquipmentSlot that the material can be equipped in
      */
     public static @Nullable EquipmentSlot getArmorEquipmentSlotOfMaterial(@NotNull Material material) {
-        switch (material) {
-            case LEATHER_HELMET:
-            case CHAINMAIL_HELMET:
-            case GOLDEN_HELMET:
-            case IRON_HELMET:
-            case DIAMOND_HELMET:
-            case NETHERITE_HELMET:
-            case TURTLE_HELMET:
-                return EquipmentSlot.HEAD;
-            case LEATHER_CHESTPLATE:
-            case CHAINMAIL_CHESTPLATE:
-            case GOLDEN_CHESTPLATE:
-            case IRON_CHESTPLATE:
-            case DIAMOND_CHESTPLATE:
-            case NETHERITE_CHESTPLATE:
-            case ELYTRA:
-                return EquipmentSlot.CHEST;
-            case LEATHER_LEGGINGS:
-            case CHAINMAIL_LEGGINGS:
-            case GOLDEN_LEGGINGS:
-            case IRON_LEGGINGS:
-            case DIAMOND_LEGGINGS:
-            case NETHERITE_LEGGINGS:
-                return EquipmentSlot.LEGS;
-            case LEATHER_BOOTS:
-            case CHAINMAIL_BOOTS:
-            case GOLDEN_BOOTS:
-            case IRON_BOOTS:
-            case DIAMOND_BOOTS:
-            case NETHERITE_BOOTS:
-                return EquipmentSlot.FEET;
-            default:
-                return null;
-        }
+        return switch (material) {
+            case LEATHER_HELMET, CHAINMAIL_HELMET, GOLDEN_HELMET, IRON_HELMET, DIAMOND_HELMET, NETHERITE_HELMET,
+                 TURTLE_HELMET
+                    -> EquipmentSlot.HEAD;
+            case LEATHER_CHESTPLATE, CHAINMAIL_CHESTPLATE, GOLDEN_CHESTPLATE, IRON_CHESTPLATE, DIAMOND_CHESTPLATE,
+                 NETHERITE_CHESTPLATE, ELYTRA
+                    -> EquipmentSlot.CHEST;
+            case LEATHER_LEGGINGS, CHAINMAIL_LEGGINGS, GOLDEN_LEGGINGS, IRON_LEGGINGS, DIAMOND_LEGGINGS,
+                 NETHERITE_LEGGINGS
+                    -> EquipmentSlot.LEGS;
+            case LEATHER_BOOTS, CHAINMAIL_BOOTS, GOLDEN_BOOTS, IRON_BOOTS, DIAMOND_BOOTS, NETHERITE_BOOTS
+                    -> EquipmentSlot.FEET;
+            default -> null;
+        };
     }
 
     /**

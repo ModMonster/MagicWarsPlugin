@@ -38,9 +38,8 @@ public class OnEntityDamage implements Listener {
 
     void handleCustomArmorEnchantments(EntityDamageEvent event) {
         Entity entity = event.getEntity();
-        if (!(entity instanceof LivingEntity)) return;
+        if (!(entity instanceof LivingEntity livingEntity)) return;
 
-        LivingEntity livingEntity = (LivingEntity) entity;
         EntityEquipment entityEquipment = livingEntity.getEquipment();
         if (entityEquipment == null) return;
         ItemStack[] armor = entityEquipment.getArmorContents();
@@ -51,9 +50,8 @@ public class OnEntityDamage implements Listener {
             for (CustomEnchantment enchantment : EnchantmentManager.enchantments) {
                 if (!(enchantment instanceof ArmorEnchantment)) continue;
 
-                if (armorPiece.getItemMeta().hasEnchant(enchantment.bukkitEnchantment)) {
-                    Integer enchantLevel = armorPiece.getEnchantmentLevel(enchantment.bukkitEnchantment);
-
+                int enchantLevel = EnchantmentManager.getEnchantLevel(armorPiece, enchantment);
+                if (enchantLevel > 0) {
                     ((ArmorEnchantment) enchantment).onTakeDamage(event, enchantLevel);
                     if (event instanceof EntityDamageByEntityEvent) ((ArmorEnchantment) enchantment).onTakeDamageFromEntity((EntityDamageByEntityEvent) event, enchantLevel);
                 }

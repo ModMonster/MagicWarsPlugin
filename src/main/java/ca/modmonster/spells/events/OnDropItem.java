@@ -11,6 +11,7 @@ public class OnDropItem implements Listener {
     public void onDropItem(PlayerDropItemEvent event) {
         ItemStack droppedItem = event.getItemDrop().getItemStack();
 
-        if (droppedItem.getItemMeta().equals(GameManager.getLobbyCompassUsableInWorld().getItemMeta())) {event.setCancelled(true); return;}
+        if (droppedItem.getItemMeta().equals(GameManager.getLobbyCompassUsableInWorld().getItemMeta()))
+            event.setCancelled(true);
     }
 }

@@ -29,7 +29,7 @@ public class LootChest {
     public final Vector location;
     public final boolean canContainEnchantedBooks;
 
-    public static Component armorEquipLore = Utilities.stringToComponentWithoutItalic("&8" + Icons.RIGHT_ARROW + " &b&lSHIFT + CLICK&3 to equip");
+    public static final Component ARMOR_EQUIP_LORE = Utilities.stringToComponentWithoutItalic("&8" + Icons.RIGHT_ARROW + " &b&lSHIFT + CLICK&3 to equip");
 
     public static void init() {
         @SuppressWarnings("unchecked")
@@ -103,7 +103,7 @@ public class LootChest {
         // add enchantments to list
         if (canContainEnchantedBooks) {
             for (CustomEnchantment enchantment : EnchantmentManager.enchantments) {
-                Integer weight = Math.round(Float.valueOf(enchantment.rarity.rarityWeight) / 2);
+                Integer weight = Math.round(Float.valueOf(enchantment.getRarity().rarityWeight) / 2);
 
                 WeightedItem enchantmentWeightedItem = new WeightedItem(null, null, enchantment, weight, 1);
 
@@ -130,7 +130,7 @@ public class LootChest {
                 inventory.setItem(slot, SpellManager.getSpell(chosenItem.spell, power).asQuantity(count));
             } else if (chosenItem.isEnchantment()) {
                 // choose level randomly
-                Integer level = random.nextInt(chosenItem.enchantment.maxLevel) + 1;
+                Integer level = random.nextInt(chosenItem.enchantment.getMaxLevel()) + 1;
 
                 inventory.setItem(slot, EnchantmentManager.getEnchantedBook(chosenItem.enchantment, level));
             } else {
@@ -142,7 +142,7 @@ public class LootChest {
 
                 // add item equip lore
                 if (Utilities.isMaterialArmor(itemStack.getType())) {
-                    meta.lore(Collections.singletonList(armorEquipLore));
+                    meta.lore(Collections.singletonList(ARMOR_EQUIP_LORE));
                 }
 
                 itemStack.setItemMeta(meta);

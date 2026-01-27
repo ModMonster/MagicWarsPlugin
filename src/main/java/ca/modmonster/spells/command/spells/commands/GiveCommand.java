@@ -16,12 +16,10 @@ import java.util.List;
 public class GiveCommand extends Subcommand {
     @Override
     public void onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if (!(sender instanceof Player)) {
+        if (!(sender instanceof Player player)) {
             sender.sendMessage("[ERROR]: Only players can use this command");
             return;
         }
-
-        Player player = (Player) sender;
 
         if (args.length < 2) {
             player.sendMessage("[ERROR]: Incorrect Syntax!"); // prints incorrect syntax

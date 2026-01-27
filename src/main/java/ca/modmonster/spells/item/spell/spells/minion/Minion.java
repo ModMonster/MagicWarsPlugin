@@ -104,7 +104,7 @@ public abstract class Minion extends Spell {
                 Entity entity = entry.getKey();
 
                 // spawn particles
-                entity.getWorld().spawnParticle(Particle.SMOKE_NORMAL, entity.getLocation().add(0, 2, 0), 10, 0.5, 0.5, 0.5, 0);
+                entity.getWorld().spawnParticle(Particle.SMOKE, entity.getLocation().add(0, 2, 0), 10, 0.5, 0.5, 0.5, 0);
 
                 // remove minion from world
                 entity.remove();

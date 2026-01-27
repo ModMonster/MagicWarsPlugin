@@ -7,19 +7,33 @@ import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.entity.EntityDeathEvent;
 
-import java.util.ArrayList;
 import java.util.Random;
 
+// I'm pretty good at this one
 public class SelfDestructEnchantment extends ArmorEnchantment {
-    public SelfDestructEnchantment() {
-        super(
-            "self_destruct",
-            "Self Destruct",
-            Rarity.UNCOMMON,
-            EnchantmentType.ARMOR,
-            1,
-            new ArrayList<>()
-        );
+    @Override
+    public String getId() {
+        return "self_destruct";
+    }
+
+    @Override
+    public String getName() {
+        return "Self Destruct";
+    }
+
+    @Override
+    public Rarity getRarity() {
+        return Rarity.UNCOMMON;
+    }
+
+    @Override
+    public EnchantmentType getType() {
+        return EnchantmentType.ARMOR;
+    }
+
+    @Override
+    public int getMaxLevel() {
+        return 1;
     }
 
     @Override
@@ -33,7 +47,7 @@ public class SelfDestructEnchantment extends ArmorEnchantment {
 
         for (int i = 0; i < new Random().nextInt(6) + 6; i++) {
             Location spawnLocation = location.clone().add((new Random().nextDouble() * 4) - 2, 0, (new Random().nextDouble() * 4) - 2);
-            location.getWorld().spawnEntity(spawnLocation, EntityType.PRIMED_TNT);
+            location.getWorld().spawnEntity(spawnLocation, EntityType.TNT);
         }
     }
 }

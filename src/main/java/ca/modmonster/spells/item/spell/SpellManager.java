@@ -85,13 +85,13 @@ public class SpellManager {
         ItemStack itemStack = new ItemStack(spell.getMaterial(), count);
 
         // set item type
-        itemStack = Utilities.setPersistentItemTag(itemStack, "spell_type", spell.getId());
+        Utilities.setPersistentItemTag(itemStack, "spell_type", spell.getId());
 
         // set power
         if (spell.getHasPower()) {
-            itemStack = Utilities.setPersistentItemTag(itemStack, "power", power.number);
+            Utilities.setPersistentItemTag(itemStack, "power", power.number);
         } else {
-            itemStack = Utilities.setPersistentItemTag(itemStack, "power", 1);
+            Utilities.setPersistentItemTag(itemStack, "power", 1);
         }
 
         // add uuid to make unstackable
@@ -101,11 +101,11 @@ public class SpellManager {
             random.nextBytes(randomBytes);
             String encoded = Base64.getEncoder().encodeToString(randomBytes);
 
-            itemStack = Utilities.setPersistentItemTag(itemStack, "uuid", encoded);
+            Utilities.setPersistentItemTag(itemStack, "uuid", encoded);
         }
 
         // set glowing
-        itemStack = Utilities.setGlowing(itemStack, spell.getGlow());
+        Utilities.setGlowing(itemStack, spell.getGlow());
 
         // get item metadata
         ItemMeta meta = itemStack.getItemMeta();

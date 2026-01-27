@@ -9,8 +9,6 @@ import ca.modmonster.spells.util.Utilities;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.GameMode;
-import org.bukkit.NamespacedKey;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -41,9 +39,7 @@ public class OnPlayerMove implements Listener {
 
     void triggerRegenerationEnchantment(PlayerMoveEvent event) {
         if (event.getFrom().getX() == event.getTo().getX() && event.getFrom().getY() == event.getTo().getY() && event.getFrom().getZ() == event.getTo().getZ()) return;
-        Enchantment enchantment = Enchantment.getByKey(NamespacedKey.minecraft("rejuvenation"));
-
-        if (EnchantmentManager.playerHasArmorEnchantment(event.getPlayer(), enchantment)) {
+        if (EnchantmentManager.playerHasArmorEnchantment(event.getPlayer(), "rejuvenation")) {
             RejuvenationEnchantment.onMove(event);
             event.getPlayer().removePotionEffect(PotionEffectType.REGENERATION);
         }

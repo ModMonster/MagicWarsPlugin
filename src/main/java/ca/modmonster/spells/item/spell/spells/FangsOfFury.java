@@ -83,6 +83,7 @@ public class FangsOfFury extends Spell {
 
     static void spawnAndTagFang(Player player, Location location) {
         Location groundLocation = Utilities.getHighestBlockYAtLocation(location);
+        if (groundLocation == null) return;
 
         EvokerFangs fang = (EvokerFangs) location.getWorld().spawnEntity(groundLocation, EntityType.EVOKER_FANGS);
         fang.setOwner(player);
@@ -119,16 +120,11 @@ class FangsOfFuryLeftClickAbility extends Ability {
     }
 
     int getDistance(Power power) {
-        switch (power) {
-            case WEAK:
-                return 6;
-            case STRONG:
-                return 9;
-            case POWERFUL:
-                return 12;
-            default:
-                return 0;
-        }
+        return switch (power) {
+            case WEAK -> 6;
+            case STRONG -> 9;
+            case POWERFUL -> 12;
+        };
     }
 
     @Override
@@ -157,7 +153,7 @@ class FangsOfFuryRightClickAbility extends Ability {
         float angle = 0f;
 
         for (int i = 0; i < totalFangCount; i++) {
-            angle += new Random().nextFloat() * 6.4;
+            angle += new Random().nextFloat() * 6.4f;
             float newFangRadius = new Random().nextFloat() * radius + 1;
 
             double x = (newFangRadius * Math.sin(angle));
@@ -177,16 +173,11 @@ class FangsOfFuryRightClickAbility extends Ability {
     }
 
     int getRadius(Power power) {
-        switch (power) {
-            case WEAK:
-                return 2;
-            case STRONG:
-                return 3;
-            case POWERFUL:
-                return 4;
-            default:
-                return 0;
-        }
+        return switch (power) {
+            case WEAK -> 2;
+            case STRONG -> 3;
+            case POWERFUL -> 4;
+        };
     }
 
     @Override

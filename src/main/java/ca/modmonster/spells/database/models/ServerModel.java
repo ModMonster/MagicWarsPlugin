@@ -56,7 +56,7 @@ public class ServerModel {
     }
 
     public void setMaxPlayers(int maxPlayers) {
-        this.maxPlayers = ServerModel.this.maxPlayers;
+        this.maxPlayers = maxPlayers;
     }
 
     public int getAliveCount() {

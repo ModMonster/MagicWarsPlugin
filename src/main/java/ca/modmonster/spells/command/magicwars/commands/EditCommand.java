@@ -14,7 +14,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
@@ -24,7 +23,7 @@ import java.util.List;
 public class EditCommand extends Subcommand {
     @Override
     public void onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if (!(sender instanceof Player)) {
+        if (!(sender instanceof Player player)) {
             sender.sendMessage(Utilities.stringToComponent("&7[&c&lERROR&7]: &eOnly players can use this command"));
             return;
         }
@@ -38,8 +37,6 @@ public class EditCommand extends Subcommand {
             sender.sendMessage(Utilities.stringToComponent("&7[&c&lERROR&7]: &eYou must specify whether or not the chest can contain enchanted books!"));
             return;
         }
-
-        Player player = (Player) sender;
 
         if (args[1].equals("findchests")) {
             sender.sendMessage("Finding chests...");
@@ -82,7 +79,7 @@ public class EditCommand extends Subcommand {
                         (int) Math.floor(vector.getZ())
                     );
 
-                    Files.write(outputFile.toPath(), (location + "\n").getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
+                    Files.writeString(outputFile.toPath(), location + "\n", StandardOpenOption.APPEND);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -207,7 +204,7 @@ public class EditCommand extends Subcommand {
             }
 
             try {
-                Files.write(outputFile.toPath(), (spawnPodLocation + "\n").getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
+                Files.writeString(outputFile.toPath(), spawnPodLocation + "\n", StandardOpenOption.APPEND);
             } catch (IOException e) {
                 e.printStackTrace();
             }

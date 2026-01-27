@@ -16,15 +16,29 @@ public class RejuvenationEnchantment extends ArmorEnchantment {
     public static final Map<Player, Integer> regenerationDelayTicks = new HashMap<>();
     final List<Player> affectedPlayers = new ArrayList<>();
 
-    public RejuvenationEnchantment() {
-        super(
-            "rejuvenation",
-            "Rejuvenation",
-            Rarity.RARE,
-            EnchantmentType.ARMOR,
-            3,
-            new ArrayList<>()
-        );
+    @Override
+    public String getId() {
+        return "rejuvenation";
+    }
+
+    @Override
+    public String getName() {
+        return "Rejuvenation";
+    }
+
+    @Override
+    public Rarity getRarity() {
+        return Rarity.RARE;
+    }
+
+    @Override
+    public EnchantmentType getType() {
+        return EnchantmentType.ARMOR;
+    }
+
+    @Override
+    public int getMaxLevel() {
+        return 3;
     }
 
     @Override

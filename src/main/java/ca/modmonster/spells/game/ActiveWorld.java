@@ -32,7 +32,7 @@ public class ActiveWorld {
         try {
             FileUtil.copy(map.sourceWorldFolder, activeWorldFolder);
         } catch (IOException e) {
-            Bukkit.getLogger().severe("Failed to load game world from source folder " + map.sourceWorldFolder.getAbsolutePath());
+            Spells.main.getLogger().severe("Failed to load game world from source folder " + map.sourceWorldFolder.getAbsolutePath());
             e.printStackTrace();
             return false;
         }

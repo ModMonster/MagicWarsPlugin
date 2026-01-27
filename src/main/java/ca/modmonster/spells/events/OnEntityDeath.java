@@ -46,9 +46,8 @@ public class OnEntityDeath implements Listener {
             for (CustomEnchantment enchantment : EnchantmentManager.enchantments) {
                 if (!(enchantment instanceof ArmorEnchantment)) continue;
 
-                if (armorPiece.getItemMeta().hasEnchant(enchantment.bukkitEnchantment)) {
-                    Integer enchantLevel = armorPiece.getEnchantmentLevel(enchantment.bukkitEnchantment);
-
+                int enchantLevel = EnchantmentManager.getEnchantLevel(armorPiece, enchantment);
+                if (enchantLevel > 0) {
                     ((ArmorEnchantment) enchantment).onDeath(event, enchantLevel);
                 }
             }
@@ -56,15 +55,13 @@ public class OnEntityDeath implements Listener {
     }
 
     void handleDeathInGame(EntityDeathEvent event) {
-        if (!(event.getEntity() instanceof Player)) return;
+        if (!(event.getEntity() instanceof Player victim)) return;
 
-        Player victim = (Player) event.getEntity();
         Player killer = victim.getKiller();
         Entity minion = null;
 
         // check if player was killed by minions
-        if (victim.getLastDamageCause() instanceof EntityDamageByEntityEvent) {
-            EntityDamageByEntityEvent lastDamageEvent = (EntityDamageByEntityEvent) victim.getLastDamageCause();
+        if (victim.getLastDamageCause() instanceof EntityDamageByEntityEvent lastDamageEvent) {
             Player minionOwner = Minion.getMinionOwner(lastDamageEvent.getDamager());
 
             if (minionOwner != null) {
