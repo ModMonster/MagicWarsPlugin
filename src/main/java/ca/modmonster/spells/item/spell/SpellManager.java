@@ -9,6 +9,7 @@ import ca.modmonster.spells.util.Utilities;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
@@ -180,7 +181,14 @@ public class SpellManager {
         // make item unbreakable
         if (itemStack.getType().getMaxDurability() != 0) {
             meta.setUnbreakable(true);
+            meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
         }
+
+        // hide damage (if something like a tool)
+        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+
+        // hide additional tooltip (firework flight duration)
+        meta.addItemFlags(ItemFlag.HIDE_ADDITIONAL_TOOLTIP);
 
         // set new metadata
         itemStack.setItemMeta(meta);
